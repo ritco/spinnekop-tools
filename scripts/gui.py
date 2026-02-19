@@ -24,7 +24,7 @@ from bom_converter import (
     generate_bewerkingen, generate_kmb_artikel_bewerking,
     generate_kmb_substuklijst_bewerking,
     STAP_VOLGORDE, STAP_BESTANDEN, STAP_GENERATORS,
-    archive_existing,
+    archive_existing, prune_lslp_branches,
 )
 from validation_engine import (
     validate_all, has_errors, count_by_severity, ValidationResult,
@@ -578,10 +578,28 @@ class App(ctk.CTk):
 
             bom_rows = parse_bom(excel_path)
 
+            # LS/LP takken afkappen (extern gelaserde aankoopstukken)
+            pruned = prune_lslp_branches(bom_rows)
+
             # Combineer standaard + SQL validatieregels
             rules = list(DEFAULT_RULES)
             rules.extend(get_sql_rules(omgeving))
             results = validate_all(bom_rows, rules=rules)
+
+            # Pruning-resultaten toevoegen als info-meldingen
+            for p in pruned:
+                results.append(ValidationResult(
+                    severity='info',
+                    message=(f"LS/LP tak afgekapt: {p['number']} "
+                             f"({p['pp']}) — {p['n_children']} "
+                             f"onderliggende items verwijderd"),
+                    detail=(f"Item {p['number']} is een extern gelaserd "
+                            f"aankoopstuk. Onderliggende materialen en "
+                            f"zaaglijsten worden niet geïmporteerd."),
+                    actie="Geen actie nodig — leverancier is verantwoordelijk",
+                    rule='LsLpPruneInfo',
+                    excel_rij=p['excel_rij'],
+                ))
 
             self.analysis_frame.show_results(
                 excel_path, omgeving, bom_rows, results
