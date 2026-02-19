@@ -8,7 +8,7 @@ The bom-import-tool.exe gets a proper release structure so Evy always has a work
 
 - [x] **Phase 1: Foundation** - Version the tool and create the stable/dev folder structure on the server
 - [x] **Phase 2: Build & Deploy** - Scripts to build the exe with version embedded and push to import-test/
-- [ ] **Phase 3: Stable Release** - Promote command that moves dev to stable with archive of old version
+- [x] **Phase 3: Stable Release** - Promote command that moves dev to stable with archive of old version
 
 ## Phase Details
 
@@ -53,7 +53,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 03-01-PLAN.md -- Create promote.ps1 (archive + promote + verify) and test end-to-end on server
+- [x] 03-01-PLAN.md -- Create promote.ps1 (archive + promote + verify) and test end-to-end on server
 
 ## Progress
 
@@ -63,4 +63,4 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-02-19 |
 | 2. Build & Deploy | 2/2 | Complete | 2026-02-19 |
-| 3. Stable Release | 0/1 | Planned | - |
+| 3. Stable Release | 1/1 | Complete | 2026-02-19 |

@@ -49,7 +49,7 @@ completed: 2026-02-19
 - **Duration:** ~2 min
 - **Started:** 2026-02-19T11:59:14Z
 - **Completed:** 2026-02-19T12:00:50Z
-- **Tasks:** 1 of 2 (Task 2 is human-verify checkpoint)
+- **Tasks:** 2/2 (Task 2: human-verify checkpoint passed)
 - **Files modified:** 1
 
 ## Accomplishments
@@ -65,7 +65,8 @@ Each task was committed atomically:
 
 1. **Task 1: Create promote.ps1** - `5657a25` (feat)
 
-**Plan metadata:** pending (after checkpoint verification)
+**Plan metadata:** `fc49175` (docs)
+2. **Task 2: Verify promote end-to-end** — human-verify checkpoint passed (archive created, shortcut works)
 
 ## Files Created/Modified
 
@@ -90,14 +91,21 @@ None.
 
 None - no external service configuration required.
 
-## Next Phase Readiness
+## Checkpoint Verification Results
 
-Task 2 (human-verify checkpoint) is pending — Rik needs to run promote.ps1 end-to-end on VMSERVERRUM to confirm:
-1. Confirmation prompt works, "n" aborts cleanly
-2. Archive is created at Z:\archive\{version}\
-3. Z:\bom-import-tool.exe replaced with dev build
-4. Evy's desktop shortcut opens the promoted version
+Task 2 (human-verify) — **PASSED**:
+- promote.ps1 ran successfully
+- Archive created: `Z:\archive\1.0.0\bom-import-tool.exe` (26.5 MB — old stable)
+- `Z:\bom-import-tool.exe` replaced with dev build (31.2 MB — v1.0.0)
+- Evy's desktop shortcut opens the promoted version
+
+## Self-Check: PASSED
+
+- FOUND: scripts/promote.ps1
+- FOUND: commit 5657a25 (feat(03-01): create promote.ps1)
+- FOUND: .planning/phases/03-stable-release/03-01-SUMMARY.md
+- VERIFIED: archive at Z:\archive\1.0.0\, shortcut functional
 
 ---
 *Phase: 03-stable-release*
-*Completed: 2026-02-19 (partial — Task 2 checkpoint pending)*
+*Completed: 2026-02-19*

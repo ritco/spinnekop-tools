@@ -18,13 +18,13 @@
 
 ### Build & Deploy
 
-- [ ] **BLD-01**: PowerShell build script dat PyInstaller draait en versienummer inbakt in de exe
-- [ ] **BLD-02**: PowerShell deploy script dat exe naar `C:\import-test\` op de server kopieert (met VPN/ping check)
-- [ ] **BLD-03**: Promote commando dat dev versie kopieert naar stable (met archivering oude stable)
+- [x] **BLD-01**: PowerShell build script dat PyInstaller draait en versienummer inbakt in de exe
+- [x] **BLD-02**: PowerShell deploy script dat exe naar `C:\import-test\` op de server kopieert (met VPN/ping check)
+- [x] **BLD-03**: Promote commando dat dev versie kopieert naar stable (met archivering oude stable)
 
 ### Rollback
 
-- [ ] **RBK-01**: Bij promote wordt de oude stable versie verplaatst naar `C:\import\archive\{versie}\`
+- [x] **RBK-01**: Bij promote wordt de oude stable versie verplaatst naar `C:\import\archive\{versie}\`
 
 ## v2 Requirements
 
@@ -56,10 +56,10 @@
 | SRV-01 | Phase 1 | Done |
 | SRV-02 | Phase 1 | Done |
 | SRV-03 | Phase 1 | Done |
-| BLD-01 | Phase 2 | Pending |
-| BLD-02 | Phase 2 | Pending |
-| BLD-03 | Phase 3 | Pending |
-| RBK-01 | Phase 3 | Pending |
+| BLD-01 | Phase 2 | Done |
+| BLD-02 | Phase 2 | Done |
+| BLD-03 | Phase 3 | Done |
+| RBK-01 | Phase 3 | Done |
 
 **Coverage:**
 - v1 requirements: 9 total
