@@ -51,21 +51,21 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VER-01 | - | Pending |
-| VER-02 | - | Pending |
-| SRV-01 | - | Pending |
-| SRV-02 | - | Pending |
-| SRV-03 | - | Pending |
-| BLD-01 | - | Pending |
-| BLD-02 | - | Pending |
-| BLD-03 | - | Pending |
-| RBK-01 | - | Pending |
+| VER-01 | Phase 1 | Pending |
+| VER-02 | Phase 1 | Pending |
+| SRV-01 | Phase 1 | Pending |
+| SRV-02 | Phase 1 | Pending |
+| SRV-03 | Phase 1 | Pending |
+| BLD-01 | Phase 2 | Pending |
+| BLD-02 | Phase 2 | Pending |
+| BLD-03 | Phase 3 | Pending |
+| RBK-01 | Phase 3 | Pending |
 
 **Coverage:**
 - v1 requirements: 9 total
-- Mapped to phases: 0
-- Unmapped: 9
+- Mapped to phases: 9
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after initial definition*
+*Last updated: 2026-02-19 after roadmap creation — traceability complete*
