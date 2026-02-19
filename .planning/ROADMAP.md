@@ -36,11 +36,11 @@ Plans:
   1. Running the build script produces an exe with the version from the source variable embedded in the filename or readable from the binary
   2. Running the deploy script copies the exe to `C:\import-test\` after verifying VPN/ping connectivity — and fails cleanly if the server is unreachable
   3. Rik can go from source change to testable exe on the server in one command sequence
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Write build.ps1 that runs PyInstaller and injects version into the exe
-- [ ] 02-02: Write deploy.ps1 that ping-checks VMSERVERRUM and copies exe to import-test/ via Z: drive
+- [ ] 02-01-PLAN.md — Build script: leest __version__ uit main.py, draait PyInstaller, produceert versioned exe
+- [ ] 02-02-PLAN.md — Deploy script: ping check, drive mapping, kopieert exe naar import-test op server + SMB share aanmaken
 
 ### Phase 3: Stable Release
 **Goal**: Rik can promote the dev version to stable, and the previous stable is archived so a bad deploy can be recovered from
