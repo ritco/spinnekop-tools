@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in de ontwikkeling zit.
-**Current focus:** Phase 1 - Foundation
+**Current focus:** Phase 2 - Build & Deploy
 
 ## Current Position
 
-Phase: 1 of 3 (Foundation)
+Phase: 2 of 3 (Build & Deploy)
 Plan: 2 of 2 in current phase
-Status: Phase 1 complete — ready for verification
-Last activity: 2026-02-19 — Plan 01-02 complete (server structure + migration + shortcut)
+Status: Phase 2 in progress — Plan 02-02 Task 1 complete, paused at checkpoint (SMB share creation)
+Last activity: 2026-02-19 — Plan 02-02 Task 1 complete (deploy.ps1), awaiting human action on server
 
-Progress: [###░░░░░░░] 33%
+Progress: [#####░░░░░] 58%
 
 ## Performance Metrics
 
@@ -28,10 +28,11 @@ Progress: [###░░░░░░░] 33%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 2/2 | ~30min | ~15min |
+| 02-build-deploy | 1/2 + checkpoint | ~8min + ~10min | ~9min |
 
 **Recent Trend:**
-- Last 5 plans: 9min (01-01), ~20min (01-02 incl. checkpoint)
-- Trend: baseline established
+- Last 5 plans: 9min (01-01), ~20min (01-02 incl. checkpoint), 8min (02-01)
+- Trend: fast execution on focused single-task plans
 
 *Updated after each plan completion*
 
@@ -49,6 +50,10 @@ Recent decisions affecting current work:
 - Server mappenstructuur: C:\import\ (stable exe), C:\import-test\ (dev), C:\import\archive\ (vorige versies)
 - Setup-scripts NIET als admin vereisen tenzij strict nodig
 - Bash UNC paden werken niet → gebruik .ps1 temp files voor Z: drive operaties
+- Build script: Push-Location/Pop-Location voor scripts/ directory (spec gebruikt relatieve paden)
+- Build output: zowel bom-import-tool-{version}.exe (traceerbaar) als bom-import-tool.exe (alias voor deploy)
+- Y: drive voor import-test share (Y: = test, Z: = productie import share)
+- Z: mapping failure is non-blocking in deploy.ps1 (deploy vereist alleen Y:)
 
 ### Pending Todos
 
@@ -62,5 +67,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Phase 1 complete — both plans executed, ready for verifier
+Stopped at: Phase 2, Plan 01 complete — build script created, ready for 02-02 (deploy script)
 Resume file: None
