@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 1 of 3 (Foundation)
-Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-02-19 — Roadmap created, ready to begin Phase 1
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-19 — Plan 01-01 complete (versioning + dynamic title bar)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [##░░░░░░░░] 17%
 
 ## Performance Metrics
 
@@ -27,11 +27,11 @@ Progress: [░░░░░░░░░░] 0%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01-foundation | 1 | 9min | 9min |
 
 **Recent Trend:**
-- Last 5 plans: none yet
-- Trend: -
+- Last 5 plans: 9min (01-01)
+- Trend: baseline established
 
 *Updated after each plan completion*
 
@@ -44,6 +44,8 @@ Recent decisions affecting current work:
 
 - Semi-auto release: volledig geautomatiseerd is overkill, handmatig te foutgevoelig
 - Stable/dev mappenstructuur: simpelste manier om Evy's versie te scheiden van dev builds
+- __version__ na docstring vóór imports: importeerbaar zonder circulaire afhankelijkheden
+- on_env_changed callback in StartFrame: UI state propageert omhoog via injection, niet via koppeling aan App
 
 ### Pending Todos
 
@@ -57,5 +59,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Roadmap created, Phase 1 ready to plan
+Stopped at: Completed 01-01-PLAN.md (versioning + dynamic title bar)
 Resume file: None
