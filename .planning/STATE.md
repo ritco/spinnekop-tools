@@ -67,5 +67,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Phase 2, Plan 01 complete — build script created, ready for 02-02 (deploy script)
-Resume file: None
+Stopped at: Phase 2, Plan 02, Task 2 checkpoint — deploy.ps1 ready, awaiting SMB share creation on VMSERVERRUM via RDP
+Resume file: None (resume after human action: create \\10.0.1.5\import-test SMB share)
