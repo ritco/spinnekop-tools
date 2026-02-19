@@ -32,6 +32,7 @@ from validation_engine import (
 )
 from sql_validator import get_sql_rules
 from history import log_import, get_recent_display
+from main import __version__
 
 
 # =============================================================================
@@ -39,7 +40,7 @@ from history import log_import, get_recent_display
 # =============================================================================
 
 APP_TITLE = "BOM Import Tool — Spinnekop"
-APP_VERSION = "1.0.0"
+APP_VERSION = __version__
 DEFAULT_BASIS = r'C:\import'
 
 # Kleuren (uit analyse/design)
@@ -78,9 +79,10 @@ FONT_ACTIE = ("Segoe UI", 12, "italic")
 class StartFrame(ctk.CTkFrame):
     """Startscherm: bestand openen, omgeving kiezen."""
 
-    def __init__(self, master, on_file_selected):
+    def __init__(self, master, on_file_selected, on_env_changed=None):
         super().__init__(master, fg_color=CLR_BG)
         self.on_file_selected = on_file_selected
+        self.on_env_changed = on_env_changed
 
         # Header
         header = ctk.CTkFrame(self, fg_color=CLR_PRIMARY, corner_radius=0)
@@ -107,6 +109,8 @@ class StartFrame(ctk.CTkFrame):
         ).pack(anchor="w", padx=15, pady=(15, 5))
 
         self.omgeving_var = ctk.StringVar(value="speel")
+        if on_env_changed:
+            self.omgeving_var.trace_add("write", lambda *_: on_env_changed(self.omgeving_var.get()))
         radio_frame = ctk.CTkFrame(env_frame, fg_color="transparent")
         radio_frame.pack(fill="x", padx=15, pady=(0, 15))
 
@@ -517,7 +521,6 @@ class App(ctk.CTk):
         super().__init__()
 
         # Venster configuratie
-        self.title(APP_TITLE)
         self.geometry("900x700")
         self.minsize(800, 600)
 
@@ -525,19 +528,36 @@ class App(ctk.CTk):
         ctk.set_default_color_theme("blue")
 
         # Frames
-        self.start_frame = StartFrame(self, on_file_selected=self._load_file)
+        self.start_frame = StartFrame(
+            self,
+            on_file_selected=self._load_file,
+            on_env_changed=self._update_title,
+        )
         self.analysis_frame = AnalysisFrame(
             self,
             on_back=self._show_start,
             on_generate=self._generate_csvs,
         )
 
+        # Titel instellen met versie en omgeving (dynamisch bijgewerkt)
+        self._update_title("speel")  # standaard omgeving
+
         self._show_start()
+
+    def _update_title(self, omgeving: str):
+        """Update de title bar met versienummer en actieve omgeving."""
+        omgeving_label = "Speelomgeving" if omgeving == "speel" else "Live (productie)"
+        self.title(f"BOM Import Tool v{APP_VERSION} [{omgeving_label}]")
 
     def _show_start(self):
         """Toon het startscherm."""
         self.analysis_frame.pack_forget()
         self.start_frame.pack(fill="both", expand=True)
+        # Titel herstellen op basis van geselecteerde omgeving
+        try:
+            self._update_title(self.start_frame.omgeving_var.get())
+        except Exception:
+            self._update_title("speel")
         # Recente imports laden
         try:
             recent = get_recent_display()
@@ -567,6 +587,7 @@ class App(ctk.CTk):
                 excel_path, omgeving, bom_rows, results
             )
             self._show_analysis()
+            self._update_title(omgeving)
 
         except Exception as e:
             messagebox.showerror(
