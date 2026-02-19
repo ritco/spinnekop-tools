@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 <#
 .SYNOPSIS
     Eenmalige server setup voor BOM Import Tool release structuur.
