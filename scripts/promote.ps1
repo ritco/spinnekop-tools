@@ -1,6 +1,11 @@
 # Promote BOM Import Tool van dev naar stable op VMSERVERRUM
 # Gebruik: powershell -ExecutionPolicy Bypass -File scripts/promote.ps1
+# Met -Force: powershell -ExecutionPolicy Bypass -File scripts/promote.ps1 -Force
 # Archiveert huidige stable, kopieert dev build naar stable locatie
+
+param(
+    [switch]$Force
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -47,10 +52,14 @@ Write-Host "  Dev:     Y:\bom-import-tool.exe -> Z:\bom-import-tool.exe" -Foregr
 Write-Host "  Archief: Z:\bom-import-tool.exe -> Z:\archive\$Version\" -ForegroundColor Gray
 Write-Host ""
 
-$confirm = Read-Host "Doorgaan? (j/n)"
-if ($confirm -ine 'j') {
-    Write-Host "Afgebroken." -ForegroundColor Yellow
-    exit 0
+if ($Force) {
+    Write-Host "      -Force: bevestiging overgeslagen" -ForegroundColor Gray
+} else {
+    $confirm = Read-Host "Doorgaan? (j/n)"
+    if ($confirm -ine 'j') {
+        Write-Host "Afgebroken." -ForegroundColor Yellow
+        exit 0
+    }
 }
 
 Write-Host ""
