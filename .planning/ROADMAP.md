@@ -7,7 +7,7 @@ The bom-import-tool.exe gets a proper release structure so Evy always has a work
 ## Phases
 
 - [x] **Phase 1: Foundation** - Version the tool and create the stable/dev folder structure on the server
-- [ ] **Phase 2: Build & Deploy** - Scripts to build the exe with version embedded and push to import-test/
+- [x] **Phase 2: Build & Deploy** - Scripts to build the exe with version embedded and push to import-test/
 - [ ] **Phase 3: Stable Release** - Promote command that moves dev to stable with archive of old version
 
 ## Phase Details
@@ -39,8 +39,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Build script: leest __version__ uit main.py, draait PyInstaller, produceert versioned exe
-- [ ] 02-02-PLAN.md — Deploy script: ping check, drive mapping, kopieert exe naar import-test op server + SMB share aanmaken
+- [x] 02-01-PLAN.md — Build script: leest __version__ uit main.py, draait PyInstaller, produceert versioned exe
+- [x] 02-02-PLAN.md — Deploy script: ping check, drive mapping, kopieert exe naar import-test op server + SMB share aanmaken
 
 ### Phase 3: Stable Release
 **Goal**: Rik can promote the dev version to stable, and the previous stable is archived so a bad deploy can be recovered from
@@ -62,5 +62,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-02-19 |
-| 2. Build & Deploy | 0/2 | Not started | - |
+| 2. Build & Deploy | 2/2 | Complete | 2026-02-19 |
 | 3. Stable Release | 0/1 | Not started | - |

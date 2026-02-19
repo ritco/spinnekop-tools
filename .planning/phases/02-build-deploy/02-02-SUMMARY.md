@@ -13,7 +13,7 @@ requires:
     provides: bom-import-tool.exe in scripts/dist/
 provides:
   - deploy.ps1 script that pushes dev builds to import-test on VMSERVERRUM
-  - import-test SMB share accessible at \\10.0.1.5\import-test (pending human action)
+  - import-test SMB share accessible at \\10.0.1.5\import-test (verified via Y: mapping)
 affects: [02-build-deploy, future testing workflows]
 
 # Tech tracking
@@ -36,7 +36,7 @@ patterns-established:
   - "Pattern: Drive mapping is idempotent (net use check before mapping)"
 
 # Metrics
-duration: ~10min (Task 1) + checkpoint pending
+duration: ~10min (Task 1) + ~5min (checkpoint)
 completed: 2026-02-19
 ---
 
@@ -46,10 +46,10 @@ completed: 2026-02-19
 
 ## Performance
 
-- **Duration:** ~10min (Task 1 complete; paused at Task 2 checkpoint)
+- **Duration:** ~15min (Task 1 auto + Task 2 checkpoint)
 - **Started:** 2026-02-19
-- **Completed:** 2026-02-19 (partial — pending human action for SMB share creation)
-- **Tasks:** 1/2 (Task 2 is human-action checkpoint)
+- **Completed:** 2026-02-19
+- **Tasks:** 2/2 (Task 2 was human-action checkpoint — SMB share created and verified)
 - **Files modified:** 1
 
 ## Accomplishments
@@ -65,9 +65,9 @@ completed: 2026-02-19
 Each task was committed atomically:
 
 1. **Task 1: Create deploy.ps1** - `fe73a28` (feat)
-2. **Task 2: Create import-test SMB share** - pending human action (RDP on VMSERVERRUM)
+2. **Task 2: Create import-test SMB share** - completed via RDP (human action, verified via Y: mapping)
 
-**Plan metadata:** see final commit after Task 2 completion
+**Plan metadata:** `3f53ebf` (docs)
 
 ## Files Created/Modified
 - `scripts/deploy.ps1` - Deploy script: ping-check, drive mapping, copy exe to Y:\, verification
@@ -109,9 +109,9 @@ powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1
 ```
 
 ## Next Phase Readiness
-- deploy.ps1 is ready — will work immediately once import-test SMB share exists on server
-- After share creation: full dev-to-server pipeline operational (build.ps1 -> deploy.ps1)
-- Phase 2 Plan 03 can proceed once deploy is verified working
+- deploy.ps1 werkt — import-test SMB share is aangemaakt en geverifieerd
+- Full dev-to-server pipeline operationeel: build.ps1 -> deploy.ps1
+- Phase 3 (promote.ps1) kan starten
 
 ## Self-Check: PASSED
 
