@@ -21,11 +21,11 @@ The bom-import-tool.exe gets a proper release structure so Evy always has a work
   2. When the exe runs, the title bar shows the version number
   3. The server has `C:\import\bom-import-tool\stable\` and `C:\import\bom-import-tool\dev\` folders
   4. Evy has a desktop shortcut that points to stable\bom-import-tool.exe and does not need to be updated when new versions ship
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Add version variable to tool source and display in GUI title bar
-- [ ] 01-02: Create server folder structure (stable/, dev/, archive/) and Evy's desktop shortcut
+- [ ] 01-01-PLAN.md — Versievariabele in main.py + dynamische title bar met versie en omgeving in gui.py
+- [ ] 01-02-PLAN.md — Server-mappenstructuur (stable, dev, archive), exe-migratie en Public Desktop snelkoppeling
 
 ### Phase 2: Build & Deploy
 **Goal**: Rik can build a versioned exe and push it to the dev folder on the server with a single command
