@@ -7,24 +7,24 @@
 
 ### Versioning
 
-- [ ] **VER-01**: Tool heeft een centrale versievariabele (semver, bijv. 1.0.0)
-- [ ] **VER-02**: Versienummer is zichtbaar in de GUI title bar
+- [x] **VER-01**: Tool heeft een centrale versievariabele (semver, bijv. 1.0.0)
+- [x] **VER-02**: Versienummer is zichtbaar in de GUI title bar (incl. actieve omgeving)
 
 ### Server-structuur
 
-- [ ] **SRV-01**: Stabiele versie staat in `C:\import\bom-import-tool\stable\bom-import-tool.exe`
-- [ ] **SRV-02**: Dev versie staat in `C:\import\bom-import-tool\dev\bom-import-tool.exe`
-- [ ] **SRV-03**: Evy heeft een desktop-snelkoppeling op de server die naar stable\bom-import-tool.exe wijst
+- [x] **SRV-01**: Stabiele versie staat op `C:\import\bom-import-tool.exe`
+- [x] **SRV-02**: Dev/test locatie op `C:\import-test\` met `speel\` en `live\` submappen
+- [x] **SRV-03**: Evy heeft een Public Desktop snelkoppeling die naar `C:\import\bom-import-tool.exe` wijst
 
 ### Build & Deploy
 
 - [ ] **BLD-01**: PowerShell build script dat PyInstaller draait en versienummer inbakt in de exe
-- [ ] **BLD-02**: PowerShell deploy script dat exe naar dev/ op de server kopieert (met VPN/ping check)
+- [ ] **BLD-02**: PowerShell deploy script dat exe naar `C:\import-test\` op de server kopieert (met VPN/ping check)
 - [ ] **BLD-03**: Promote commando dat dev versie kopieert naar stable (met archivering oude stable)
 
 ### Rollback
 
-- [ ] **RBK-01**: Bij promote wordt de oude stable versie verplaatst naar `archive/{versie}/`
+- [ ] **RBK-01**: Bij promote wordt de oude stable versie verplaatst naar `C:\import\archive\{versie}\`
 
 ## v2 Requirements
 
@@ -51,11 +51,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VER-01 | Phase 1 | Pending |
-| VER-02 | Phase 1 | Pending |
-| SRV-01 | Phase 1 | Pending |
-| SRV-02 | Phase 1 | Pending |
-| SRV-03 | Phase 1 | Pending |
+| VER-01 | Phase 1 | Done |
+| VER-02 | Phase 1 | Done |
+| SRV-01 | Phase 1 | Done |
+| SRV-02 | Phase 1 | Done |
+| SRV-03 | Phase 1 | Done |
 | BLD-01 | Phase 2 | Pending |
 | BLD-02 | Phase 2 | Pending |
 | BLD-03 | Phase 3 | Pending |
