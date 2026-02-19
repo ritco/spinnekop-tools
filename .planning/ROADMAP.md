@@ -50,10 +50,10 @@ Plans:
   1. Running the promote command moves the current stable exe to `C:\import\archive\{versie}\` before replacing it with the dev build
   2. After promote, Evy's desktop shortcut opens the newly promoted version without any action on her part
   3. The archive folder contains a dated/versioned copy of every previous stable build
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 03-01: Write promote.ps1 that archives old stable, copies dev to stable, verifies shortcut still works
+- [ ] 03-01-PLAN.md -- Create promote.ps1 (archive + promote + verify) and test end-to-end on server
 
 ## Progress
 
@@ -63,4 +63,4 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-02-19 |
 | 2. Build & Deploy | 2/2 | Complete | 2026-02-19 |
-| 3. Stable Release | 0/1 | Not started | - |
+| 3. Stable Release | 0/1 | Planned | - |
