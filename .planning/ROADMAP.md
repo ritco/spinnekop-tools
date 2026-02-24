@@ -53,10 +53,10 @@ Plans:
   1. Na promote staat er een version.json op Z: met daarin de versienummers van bom-import-tool en productiestructuur
   2. v1.2.0 van bom-import-tool staat op Z: (stable) en Evy kan het starten via haar snelkoppeling
   3. De oude versie is gearchiveerd in Z:\archive\ conform bestaand archive-mechanisme
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md — Refactor promote.ps1 met -Tool parameter, version.json generatie, en promote v1.2.0
 
 ### Phase 5: Self-update
 **Goal**: bom-import-tool checkt bij opstart of er een nieuwere versie beschikbaar is op de netwerk share en biedt de gebruiker een update aan
@@ -94,6 +94,6 @@ Plans:
 | 1. Foundation | v1.0 | 2/2 | Complete | 2026-02-19 |
 | 2. Build & Deploy | v1.0 | 2/2 | Complete | 2026-02-19 |
 | 3. Stable Release | v1.0 | 1/1 | Complete | 2026-02-19 |
-| 4. Promote v1.2.0 + version.json | v1.1 | 0/? | Not started | - |
+| 4. Promote v1.2.0 + version.json | v1.1 | 0/1 | Planned | - |
 | 5. Self-update | v1.1 | 0/? | Not started | - |
 | 6. Productiestructuur Config + Update | v1.1 | 0/? | Not started | - |
