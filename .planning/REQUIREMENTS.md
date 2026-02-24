@@ -43,20 +43,20 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PRV-01 | — | Pending |
-| PRV-02 | — | Pending |
-| UPD-01 | — | Pending |
-| UPD-02 | — | Pending |
-| UPD-03 | — | Pending |
-| UPD-04 | — | Pending |
-| PST-01 | — | Pending |
-| PST-02 | — | Pending |
+| PRV-01 | Phase 4 | Pending |
+| PRV-02 | Phase 4 | Pending |
+| UPD-01 | Phase 5 | Pending |
+| UPD-02 | Phase 5 | Pending |
+| UPD-03 | Phase 5 | Pending |
+| UPD-04 | Phase 5 | Pending |
+| PST-01 | Phase 6 | Pending |
+| PST-02 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 8 total
-- Mapped to phases: 0
-- Unmapped: 8 ⚠️
+- Mapped to phases: 8
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-24*
-*Last updated: 2026-02-24 after initial definition*
+*Last updated: 2026-02-24 after roadmap creation*
