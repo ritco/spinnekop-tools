@@ -5,13 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-24)
 
 **Core value:** Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in de ontwikkeling zit.
-**Current focus:** v1.0 shipped — planning next milestone
+**Current focus:** v1.1 Config + Self-update
 
 ## Current Position
 
-Milestone: v1.0 Release Management — SHIPPED 2026-02-24
-Status: Between milestones — ready for /gsd:new-milestone
-Last activity: 2026-02-24 — v1.0 milestone archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-24 — Milestone v1.1 started
 
 ## Accumulated Context
 
@@ -25,10 +26,11 @@ None.
 
 ### Blockers/Concerns
 
-None — v1.0 shipped cleanly.
+- Evy heeft geen Z: drive mapping — self-update moet via UNC pad werken
+- Evy's laptop moet op het Spinnekop-netwerk zitten voor updates
 
 ## Session Continuity
 
 Last session: 2026-02-24
-Stopped at: v1.0 milestone complete, archived
+Stopped at: Defining requirements for v1.1
 Resume file: None

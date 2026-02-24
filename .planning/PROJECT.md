@@ -22,22 +22,36 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 
 ### Active
 
-(None — next milestone scope TBD)
+- [ ] Promote v1.2.0 naar stable (Z:) + version.json genereren
+- [ ] Self-update check bij opstart: tool vergelijkt versie met version.json op netwerk share en biedt update aan
+- [ ] Productiestructuur tool: eigen config.json + zelfde self-update logica
+- [ ] Evy draait tool lokaal op haar laptop met werkende update via Spinnekop-netwerk
+
+## Current Milestone: v1.1 Config + Self-update
+
+**Goal:** Beide tools (bom-import-tool + productiestructuur) draaien lokaal met config.json, checken bij opstart of er een update is op de netwerk share, en Evy heeft v1.2.0 werkend op haar laptop.
+
+**Target features:**
+- version.json op Z: met versies van beide tools (gegenereerd door promote.ps1)
+- Self-update dialog bij opstart: check `\\10.0.1.5\import` voor nieuwere versie
+- Productiestructuur tool met eigen config.json en self-update
+- Promote v1.2.0 zodat Evy de config-refactoring krijgt
 
 ### Out of Scope
 
 - CI/CD pipeline — te zwaar voor 2 gebruikers en 1 tool
 - Git hosting (GitHub/GitLab) — scripts leven in Obsidian vault, lokale git volstaat
-- Automatische updates — Evy's versie wordt handmatig gepromoot
 - Multi-platform builds — alleen Windows, alleen deze server
 - Installer/MSI — exe volstaat, geen installatie nodig
 
 ## Context
 
 - **Shipped v1.0** op 2026-02-19 (~55 min totale executie, 3 fasen, 5 plannen)
+- **Config-refactoring v1.2.0** gebouwd en getest op Y: (2026-02-24) — app_config.py, config.json, settings dialog
+- **Evy draait tool lokaal** op haar laptop — heeft geen Z: drive mapping
+- **Update share**: `\\10.0.1.5\import` — Evy kan hier bij als haar laptop op het Spinnekop-netwerk zit
+- **Twee tools**: bom-import-tool.exe + productiestructuur.exe — beide deployen naar dezelfde server
 - **Codebase**: ~5000 LOC Python + PowerShell in `scripts/`
-- **Tool locatie server**: `C:\import\bom-import-tool.exe` (stable), `C:\import-test\` (dev)
-- **Broncode**: `scripts/` in de Spinnekop Obsidian vault (lokaal op Rik's laptop)
 - **Build pipeline**: `build.ps1` → `deploy.ps1` → `promote.ps1`
 - **Server**: VMSERVERRUM (10.0.1.5), bereikbaar via VPN + Z:/Y: drive mapping
 - **Dependencies**: customtkinter, xlrd, openpyxl, pyodbc, pyinstaller
@@ -61,5 +75,8 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 | Archive-before-overwrite bij promote | Rollback altijd mogelijk zonder extra tooling | ✓ Good |
 | Setup-scripts niet als admin vereisen | Vermijdt onnodige privilege-escalatie | ✓ Good |
 
+| Eigen config per tool | Beide tools krijgen eigen config.json naast de exe, niet gedeeld | — Pending |
+| Self-update via netwerk share | Evy heeft geen Z: — tool checkt UNC pad rechtstreeks | — Pending |
+
 ---
-*Last updated: 2026-02-24 after v1.0 milestone*
+*Last updated: 2026-02-24 after v1.1 milestone start*
