@@ -7,8 +7,8 @@
 
 ### Promote & Versioning
 
-- [ ] **PRV-01**: promote.ps1 genereert version.json op Z: met versie van bom-import-tool en productiestructuur
-- [ ] **PRV-02**: v1.2.0 is gepromoot naar Z: (stable) via promote.ps1
+- [x] **PRV-01**: promote.ps1 genereert version.json op Z: met versie van bom-import-tool en productiestructuur
+- [x] **PRV-02**: v1.2.0 is gepromoot naar Z: (stable) via promote.ps1
 
 ### Self-update
 
@@ -43,8 +43,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PRV-01 | Phase 4 | Pending |
-| PRV-02 | Phase 4 | Pending |
+| PRV-01 | Phase 4 | Complete |
+| PRV-02 | Phase 4 | Complete |
 | UPD-01 | Phase 5 | Pending |
 | UPD-02 | Phase 5 | Pending |
 | UPD-03 | Phase 5 | Pending |

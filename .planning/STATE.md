@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 ## Current Position
 
-Phase: 4 of 6 (Promote v1.2.0 + version.json)
-Plan: — (not yet planned)
-Status: Ready to plan
-Last activity: 2026-02-24 — Roadmap created for v1.1
+Phase: 4 of 6 (Promote v1.2.0 + version.json) -- COMPLETE
+Plan: 1/1 complete
+Status: Phase 4 complete, ready for Phase 5
+Last activity: 2026-02-26 — Phase 4 Plan 01 executed (promote v1.2.0 + version.json)
 
-Progress: [=====-----] 50% (5/10 plans across v1.0+v1.1, v1.0 complete)
+Progress: [======----] 60% (6/10 plans across v1.0+v1.1, phases 1-4 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5 (all v1.0)
+- Total plans completed: 6 (5 v1.0 + 1 v1.1)
 - Average duration: ~11 min
-- Total execution time: ~55 min
+- Total execution time: ~65 min
 
 **By Phase:**
 
@@ -30,6 +30,7 @@ Progress: [=====-----] 50% (5/10 plans across v1.0+v1.1, v1.0 complete)
 | 1. Foundation | 2 | ~22 min | ~11 min |
 | 2. Build & Deploy | 2 | ~22 min | ~11 min |
 | 3. Stable Release | 1 | ~11 min | ~11 min |
+| 4. Promote v1.2.0 | 1 | ~10 min | ~10 min |
 
 ## Accumulated Context
 
@@ -40,6 +41,9 @@ See PROJECT.md Key Decisions table for full log.
 Recent:
 - Eigen config per tool (niet gedeeld)
 - Self-update via netwerk share (UNC pad), niet via Z: drive mapping
+- Per-tool promote via -Tool parameter (bom/prod/beide)
+- version.json op Z: als single source of truth voor stable versies
+- productiestructuur start op 0.0.0 in version.json tot eerste promote
 
 ### Pending Todos
 
@@ -53,6 +57,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-24
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-promote-v120-version-json/04-CONTEXT.md
+Last session: 2026-02-26
+Stopped at: Completed 04-01-PLAN.md — Phase 4 complete
+Resume file: .planning/phases/04-promote-v120-version-json/04-01-SUMMARY.md

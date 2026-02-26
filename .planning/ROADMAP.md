@@ -39,7 +39,7 @@ Plans:
 
 **Milestone Goal:** Beide tools (bom-import-tool + productiestructuur) draaien lokaal met config.json, checken bij opstart of er een update is op de netwerk share, en Evy heeft v1.2.0 werkend op haar laptop.
 
-- [ ] **Phase 4: Promote v1.2.0 + version.json** - Promote genereert version.json en zet v1.2.0 live op Z:
+- [x] **Phase 4: Promote v1.2.0 + version.json** - Promote genereert version.json en zet v1.2.0 live op Z:
 - [ ] **Phase 5: Self-update** - Tool checkt bij opstart op updates en biedt update-dialog aan
 - [ ] **Phase 6: Productiestructuur Config + Update** - Productiestructuur tool krijgt eigen config.json en self-update
 
@@ -56,7 +56,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 04-01-PLAN.md — Refactor promote.ps1 met -Tool parameter, version.json generatie, en promote v1.2.0
+- [x] 04-01-PLAN.md — Refactor promote.ps1 met -Tool parameter, version.json generatie, en promote v1.2.0
 
 ### Phase 5: Self-update
 **Goal**: bom-import-tool checkt bij opstart of er een nieuwere versie beschikbaar is op de netwerk share en biedt de gebruiker een update aan
@@ -94,6 +94,6 @@ Plans:
 | 1. Foundation | v1.0 | 2/2 | Complete | 2026-02-19 |
 | 2. Build & Deploy | v1.0 | 2/2 | Complete | 2026-02-19 |
 | 3. Stable Release | v1.0 | 1/1 | Complete | 2026-02-19 |
-| 4. Promote v1.2.0 + version.json | v1.1 | 0/1 | Planned | - |
+| 4. Promote v1.2.0 + version.json | v1.1 | 1/1 | Complete | 2026-02-26 |
 | 5. Self-update | v1.1 | 0/? | Not started | - |
 | 6. Productiestructuur Config + Update | v1.1 | 0/? | Not started | - |
