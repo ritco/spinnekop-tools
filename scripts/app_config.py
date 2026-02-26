@@ -242,7 +242,7 @@ def _read_version_json_with_timeout(share: str, timeout_sec: float = 2.0) -> dic
             version_file = Path(share) / VERSION_FILENAME
             if not version_file.exists():
                 return
-            with open(version_file, 'r', encoding='utf-8') as f:
+            with open(version_file, 'r', encoding='utf-8-sig') as f:
                 result[0] = json.load(f)
         except (OSError, PermissionError, json.JSONDecodeError, Exception):
             pass  # Stil falen — geen update beschikbaar
@@ -253,6 +253,42 @@ def _read_version_json_with_timeout(share: str, timeout_sec: float = 2.0) -> dic
     t.start()
     done.wait(timeout=timeout_sec)
     return result[0]
+
+
+def _resolve_share(unc_share: str) -> str:
+    """Resolve de update share: probeer UNC pad, fallback naar gemapte drive.
+
+    UNC paden werken niet altijd (credentials, firewall). Als er een drive
+    letter naar dezelfde share gemapped is, gebruik die.
+    """
+    # Probeer of het UNC pad direct bereikbaar is
+    try:
+        if Path(unc_share).exists():
+            return unc_share
+    except (OSError, PermissionError):
+        pass
+
+    # Zoek een gemapte drive die naar dezelfde share wijst
+    if sys.platform == 'win32':
+        try:
+            result = subprocess.run(
+                ['net', 'use'],
+                capture_output=True, text=True, timeout=3,
+                creationflags=subprocess.CREATE_NO_WINDOW,
+            )
+            # Parse net use output: "OK  Z:  \\10.0.1.5\import  Microsoft Windows Network"
+            unc_normalized = unc_share.rstrip('\\').lower()
+            for line in result.stdout.splitlines():
+                parts = line.split()
+                if len(parts) >= 3 and ':' in parts[1]:
+                    drive = parts[1]       # "Z:"
+                    remote = parts[2]      # "\\10.0.1.5\import"
+                    if remote.rstrip('\\').lower() == unc_normalized:
+                        return drive + '\\'
+        except (subprocess.TimeoutExpired, Exception):
+            pass
+
+    return unc_share  # Geef origineel terug, timeout vangt de rest
 
 
 def check_for_update(tool_name: str, current_version: str) -> dict | None:
@@ -269,7 +305,8 @@ def check_for_update(tool_name: str, current_version: str) -> dict | None:
     if not share:
         return None
 
-    versions = _read_version_json_with_timeout(share, timeout_sec=2.0)
+    resolved = _resolve_share(share)
+    versions = _read_version_json_with_timeout(resolved, timeout_sec=2.0)
     if not versions:
         return None  # Share niet bereikbaar of geen version.json
 
@@ -283,19 +320,23 @@ def check_for_update(tool_name: str, current_version: str) -> dict | None:
     if remote > current:
         return {
             'remote_version': remote_str,
-            'update_share': share,
+            'update_share': resolved,
         }
 
     return None
 
 
-def do_self_update(tool_name: str, exe_name: str) -> bool:
+def do_self_update(tool_name: str, exe_name: str, share_override: str = None) -> bool:
     """Voer een self-update uit: kopieer nieuwe exe van share, herstart.
 
     Stappen:
     1. Kopieer {share}/{exe_name} → {lokaal}/{exe_name}.new
     2. Schrijf _update.bat die de swap doet
     3. Start _update.bat, sluit huidige applicatie
+
+    Args:
+        share_override: Resolved share pad (van check_for_update). Voorkomt
+                       dat do_self_update het UNC pad opnieuw moet resolven.
 
     Returns True als update gestart is (caller moet sys.exit doen),
     False als er iets misging.
@@ -304,8 +345,11 @@ def do_self_update(tool_name: str, exe_name: str) -> bool:
         log.warning("Self-update alleen mogelijk vanuit een exe")
         return False
 
-    config = load_config()
-    share = config.get('update_share', '')
+    if share_override:
+        share = share_override
+    else:
+        config = load_config()
+        share = _resolve_share(config.get('update_share', ''))
     if not share:
         return False
 
