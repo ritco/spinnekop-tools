@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-24)
 
 ## Current Position
 
-Phase: 5 of 6 (Self-Update Hardening) -- COMPLETE
-Plan: 2/2 complete
-Status: Phase 5 complete, ready for Phase 6
-Last activity: 2026-02-26 — Phase 5 Plan 02 executed (build v1.2.1, promote, E2E verificatie)
+Phase: 6 of 6 (Productiestructuur Config + Update)
+Plan: 1/2 complete
+Status: Phase 6 in progress — Plan 01 complete (phantom_tool.py v1.0.0 refactored)
+Last activity: 2026-02-26 — Phase 6 Plan 01 executed (phantom_tool.py config integratie en two-phase self-update)
 
-Progress: [========--] 80% (8/10 plans across v1.0+v1.1, phases 1-5 complete)
+Progress: [=========.] 90% (9/10 plans across v1.0+v1.1, phases 1-6 in progress)
 
 ## Performance Metrics
 
@@ -32,6 +32,7 @@ Progress: [========--] 80% (8/10 plans across v1.0+v1.1, phases 1-5 complete)
 | 3. Stable Release | 1 | ~11 min | ~11 min |
 | 4. Promote v1.2.0 | 1 | ~10 min | ~10 min |
 | 5. Self-Update Hardening | 2 | ~67 min | ~33 min |
+| Phase 06 P01 | 7 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -52,6 +53,10 @@ Recent:
 - [Phase 05-self-update]: _resolve_share() UNC-naar-drive-letter fallback toegevoegd voor Evy's laptop configuratie
 - [Phase 05-self-update]: share_override parameter in do_self_update() zodat resolved path hergebruikt wordt na fallback
 - [Phase 05-self-update]: encoding='utf-8-sig' voor version.json lezen (PowerShell schrijft UTF-8 BOM)
+- [Phase 06-01]: app_config.py niet aangepast — functies zijn al tool-agnostisch via tool_name parameter
+- [Phase 06-01]: phantom_tool two-phase patroon letterlijk overgenomen van main.py — bewezen patroon, geen afwijking
+- [Phase 06]: app_config.py niet aangepast voor phantom_tool — functies zijn al tool-agnostisch via tool_name parameter
+- [Phase 06]: phantom_tool two-phase self-update patroon letterlijk overgenomen van main.py — bewezen patroon, geen aanpassingen nodig
 
 ### Pending Todos
 
@@ -59,10 +64,10 @@ None.
 
 ### Blockers/Concerns
 
-None — self-update is bewezen en gefixed. Phase 6 kan beginnen.
+None — Phase 6 Plan 01 complete. Plan 02 (build + promote) volgt.
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Stopped at: Completed 05-02-PLAN.md — Phase 5 volledig afgerond, self-update E2E bewezen
-Resume file: .planning/phases/05-self-update/05-02-SUMMARY.md
+Stopped at: Completed 06-01-PLAN.md — phantom_tool.py v1.0.0 met config.json integratie en two-phase self-update
+Resume file: .planning/phases/06-productiestructuur-config-update/06-01-SUMMARY.md

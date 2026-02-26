@@ -19,8 +19,8 @@
 
 ### Productiestructuur Tool
 
-- [ ] **PST-01**: productiestructuur.exe heeft eigen config.json naast de exe (SQL server, credentials, databases)
-- [ ] **PST-02**: productiestructuur.exe heeft dezelfde self-update logica als bom-import-tool (UPD-01 t/m UPD-04)
+- [x] **PST-01**: productiestructuur.exe heeft eigen config.json naast de exe (SQL server, credentials, databases)
+- [x] **PST-02**: productiestructuur.exe heeft dezelfde self-update logica als bom-import-tool (UPD-01 t/m UPD-04)
 
 ## v2 Requirements
 
@@ -49,8 +49,8 @@
 | UPD-02 | Phase 5 | Complete |
 | UPD-03 | Phase 5 | Complete |
 | UPD-04 | Phase 5 | Complete |
-| PST-01 | Phase 6 | Pending |
-| PST-02 | Phase 6 | Pending |
+| PST-01 | Phase 6 | Complete |
+| PST-02 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 8 total
