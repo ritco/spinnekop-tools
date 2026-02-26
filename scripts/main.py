@@ -8,7 +8,7 @@ Gebruik:
   CLI:  python main.py --cli --stap alles --omgeving speel --excel bom.xls
 """
 
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 import sys
 from pathlib import Path
