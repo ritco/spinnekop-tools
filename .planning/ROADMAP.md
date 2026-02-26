@@ -67,10 +67,11 @@ Plans:
   2. Als er een nieuwere versie is, ziet de gebruiker een dialog met de huidige en nieuwe versienummers en een "Updaten" knop
   3. Bij klikken op "Updaten" wordt de nieuwe exe gekopieerd naar de lokale locatie en herstart de tool automatisch
   4. Als de netwerk share niet bereikbaar is, start de tool gewoon op zonder foutmelding of vertraging
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
+- [ ] 05-01-PLAN.md — Harden update check (timeout), CTk update dialog, fix _update.bat
+- [ ] 05-02-PLAN.md — Build v1.2.1, promote naar Z:, end-to-end verificatie self-update
 
 ### Phase 6: Productiestructuur Config + Update
 **Goal**: productiestructuur.exe heeft een eigen config.json en dezelfde self-update logica als bom-import-tool
@@ -95,5 +96,5 @@ Plans:
 | 2. Build & Deploy | v1.0 | 2/2 | Complete | 2026-02-19 |
 | 3. Stable Release | v1.0 | 1/1 | Complete | 2026-02-19 |
 | 4. Promote v1.2.0 + version.json | v1.1 | 1/1 | Complete | 2026-02-26 |
-| 5. Self-update | v1.1 | 0/? | Not started | - |
+| 5. Self-update | v1.1 | 0/2 | Planned | - |
 | 6. Productiestructuur Config + Update | v1.1 | 0/? | Not started | - |
