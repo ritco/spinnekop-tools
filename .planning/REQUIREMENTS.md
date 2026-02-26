@@ -12,10 +12,10 @@
 
 ### Self-update
 
-- [ ] **UPD-01**: Tool checkt bij opstart version.json op netwerk share (`\\10.0.1.5\import`)
-- [ ] **UPD-02**: Als er een nieuwere versie is, toont de tool een dialog met versienummers en een "Updaten" knop
-- [ ] **UPD-03**: Bij "Updaten" kopieert de tool de nieuwe exe van de share naar de lokale locatie en herstart
-- [ ] **UPD-04**: Als de share niet bereikbaar is, start de tool gewoon op zonder foutmelding (graceful fallback)
+- [x] **UPD-01**: Tool checkt bij opstart version.json op netwerk share (`\\10.0.1.5\import`)
+- [x] **UPD-02**: Als er een nieuwere versie is, toont de tool een dialog met versienummers en een "Updaten" knop
+- [x] **UPD-03**: Bij "Updaten" kopieert de tool de nieuwe exe van de share naar de lokale locatie en herstart
+- [x] **UPD-04**: Als de share niet bereikbaar is, start de tool gewoon op zonder foutmelding (graceful fallback)
 
 ### Productiestructuur Tool
 
@@ -45,10 +45,10 @@
 |-------------|-------|--------|
 | PRV-01 | Phase 4 | Complete |
 | PRV-02 | Phase 4 | Complete |
-| UPD-01 | Phase 5 | Pending |
-| UPD-02 | Phase 5 | Pending |
-| UPD-03 | Phase 5 | Pending |
-| UPD-04 | Phase 5 | Pending |
+| UPD-01 | Phase 5 | Complete |
+| UPD-02 | Phase 5 | Complete |
+| UPD-03 | Phase 5 | Complete |
+| UPD-04 | Phase 5 | Complete |
 | PST-01 | Phase 6 | Pending |
 | PST-02 | Phase 6 | Pending |
 
@@ -59,4 +59,4 @@
 
 ---
 *Requirements defined: 2026-02-24*
-*Last updated: 2026-02-24 after roadmap creation*
+*Last updated: 2026-02-26 after Phase 5 Plan 01 (self-update hardening)*
