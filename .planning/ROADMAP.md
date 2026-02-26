@@ -81,10 +81,11 @@ Plans:
   1. productiestructuur.exe leest SQL server, credentials en databases uit een eigen config.json naast de exe
   2. Bij opstart checkt productiestructuur.exe version.json op de netwerk share en biedt een update-dialog aan (identiek gedrag als bom-import-tool)
   3. Als config.json ontbreekt, opent de settings dialog automatisch (consistent met bom-import-tool gedrag)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: TBD
+- [ ] 06-01-PLAN.md — Config integratie en twee-fase self-update in phantom_tool.py
+- [ ] 06-02-PLAN.md — Build v1.0.0, deploy, promote naar Z:, E2E verificatie
 
 ## Progress
 
@@ -97,4 +98,4 @@ Plans:
 | 3. Stable Release | v1.0 | 1/1 | Complete | 2026-02-19 |
 | 4. Promote v1.2.0 + version.json | v1.1 | 1/1 | Complete | 2026-02-26 |
 | 5. Self-update | v1.1 | 2/2 | Complete | 2026-02-26 |
-| 6. Productiestructuur Config + Update | v1.1 | 0/? | Not started | - |
+| 6. Productiestructuur Config + Update | v1.1 | 0/2 | Not started | - |
