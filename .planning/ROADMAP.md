@@ -40,7 +40,7 @@ Plans:
 **Milestone Goal:** Beide tools (bom-import-tool + productiestructuur) draaien lokaal met config.json, checken bij opstart of er een update is op de netwerk share, en Evy heeft v1.2.0 werkend op haar laptop.
 
 - [x] **Phase 4: Promote v1.2.0 + version.json** - Promote genereert version.json en zet v1.2.0 live op Z:
-- [~] **Phase 5: Self-update** - Tool checkt bij opstart op updates en biedt update-dialog aan (05-01 complete, 05-02 remaining)
+- [x] **Phase 5: Self-update** - bom-import-tool v1.2.1 live, self-update cyclus E2E bewezen (update dialog, exe-swap, graceful fallback)
 - [ ] **Phase 6: Productiestructuur Config + Update** - Productiestructuur tool krijgt eigen config.json en self-update
 
 ## Phase Details
@@ -71,7 +71,7 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — Harden update check (timeout), CTk update dialog, fix _update.bat
-- [ ] 05-02-PLAN.md — Build v1.2.1, promote naar Z:, end-to-end verificatie self-update
+- [x] 05-02-PLAN.md — Build v1.2.1, promote naar Z:, end-to-end verificatie self-update
 
 ### Phase 6: Productiestructuur Config + Update
 **Goal**: productiestructuur.exe heeft een eigen config.json en dezelfde self-update logica als bom-import-tool
@@ -96,5 +96,5 @@ Plans:
 | 2. Build & Deploy | v1.0 | 2/2 | Complete | 2026-02-19 |
 | 3. Stable Release | v1.0 | 1/1 | Complete | 2026-02-19 |
 | 4. Promote v1.2.0 + version.json | v1.1 | 1/1 | Complete | 2026-02-26 |
-| 5. Self-update | v1.1 | 1/2 | In Progress | - |
+| 5. Self-update | v1.1 | 2/2 | Complete | 2026-02-26 |
 | 6. Productiestructuur Config + Update | v1.1 | 0/? | Not started | - |
