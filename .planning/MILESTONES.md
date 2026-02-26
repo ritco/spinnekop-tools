@@ -14,3 +14,19 @@
 
 ---
 
+
+## v1.1 Config + Self-update (Shipped: 2026-02-26)
+
+**Phases completed:** 3 phases, 5 plans
+**Timeline:** 7 days (2026-02-19 → 2026-02-26)
+**Git range:** feat(04-01) → feat(06-02)
+
+**Key accomplishments:**
+- promote.ps1 met -Tool parameter en atomaire version.json generatie op Z:
+- Self-update mechanisme: threading timeout voor UNC share, CTk update dialog, exe-swap via batch
+- bom-import-tool v1.2.1 self-update E2E bewezen (update dialog, exe-swap + herstart, graceful fallback)
+- productiestructuur.exe v1.0.0 met eigen config.json en identiek self-update patroon
+- Critical fix: explorer-launch ipv `start ""` voor PyInstaller windowed builds (DLL loading)
+
+---
+

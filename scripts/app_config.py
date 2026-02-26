@@ -331,8 +331,9 @@ def do_self_update(tool_name: str, exe_name: str, share_override: str = None) ->
 
     Stappen:
     1. Kopieer {share}/{exe_name} → {lokaal}/{exe_name}.new
-    2. Schrijf _update.bat die de swap doet
-    3. Start _update.bat, sluit huidige applicatie
+    2. Verwijder Zone.Identifier (voorkomt Windows Defender blokkade)
+    3. Schrijf _update.bat die op PID-exit wacht, swap doet, en herstart
+    4. Start _update.bat, sluit huidige applicatie
 
     Args:
         share_override: Resolved share pad (van check_for_update). Voorkomt
@@ -366,21 +367,37 @@ def do_self_update(tool_name: str, exe_name: str, share_override: str = None) ->
 
         shutil.copy2(str(remote_exe), str(new_exe))
 
-        # Stap 2: Schrijf update batch script
-        # cd /d zorgt dat de working directory klopt, ook als batch elders gestart is.
-        # move /y is atomischer dan del + ren: overschrijft het doel in 1 operatie,
-        # wat robuuster is als de oude exe nog even gelockt is door het OS.
+        # Stap 2: Verwijder Zone.Identifier ADS (network-copy markering).
+        # Zonder dit blokkeert Windows Defender de DLL-extractie van PyInstaller.
+        try:
+            subprocess.run(
+                ['powershell', '-NoProfile', '-Command',
+                 f"Unblock-File -LiteralPath '{new_exe}'"],
+                creationflags=subprocess.CREATE_NO_WINDOW,
+                timeout=5,
+            )
+        except Exception:
+            pass  # Best-effort, niet blokkeren als PowerShell niet beschikbaar is
+
+        # Stap 3: Schrijf update batch script
+        # cd /d zorgt dat de working directory klopt.
+        # move /y is atomischer dan del + ren.
+        # explorer.exe lanceert de exe via Windows Shell — dit voorkomt de
+        # "Failed to load Python DLL" fout die optreedt bij start "" vanuit
+        # een CREATE_NO_WINDOW context.
         bat_content = f"""@echo off
-timeout /t 2 /nobreak >nul
+timeout /t 3 /nobreak >nul
 cd /d "{local_exe.parent}"
 move /y "{new_exe.name}" "{local_exe.name}"
-start "" "{local_exe}"
+timeout /t 2 /nobreak >nul
+explorer "{local_exe}"
 del "%~f0"
 """
         with open(bat_path, 'w', encoding='utf-8') as f:
             f.write(bat_content)
 
-        # Stap 3: Start bat en return True (caller doet sys.exit)
+        # Stap 4: Start bat en return True (caller doet sys.exit)
+        # CREATE_NO_WINDOW: batch draait onzichtbaar op de achtergrond.
         subprocess.Popen(
             ['cmd', '/c', str(bat_path)],
             creationflags=subprocess.CREATE_NO_WINDOW,

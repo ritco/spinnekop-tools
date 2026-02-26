@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Release management voor de `bom-import-tool.exe`, een PyInstaller GUI-applicatie die SolidWorks BOM Excel-bestanden omzet naar CSV's voor RidderIQ import. De tool draait op VMSERVERRUM (de RidderIQ server) en wordt gebruikt door twee mensen: Evy (BOM-validatie) en Rik (ontwikkeling + daadwerkelijke import). Evy werkt op een stabiele versie terwijl Rik vrij kan doorontwikkelen via een gescheiden dev/stable pipeline.
+Release management voor de `bom-import-tool.exe` en `productiestructuur.exe`, twee PyInstaller GUI-applicaties voor Spinnekop BV. Beide tools draaien lokaal op laptops, hebben een eigen config.json, en updaten zichzelf automatisch via een netwerk share. Evy gebruikt de BOM Import Tool (SolidWorks BOM → RidderIQ CSV), Jurgen gebruikt de Productiestructuur Tool (phantom-vlaggen instellen).
 
 ## Core Value
 
@@ -19,40 +19,36 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 - ✓ Promote commando dat dev naar stable kopieert met archivering — v1.0
 - ✓ Rollback mogelijk naar vorige stabiele versie (via archive) — v1.0
 - ✓ Evy hoeft niets te configureren — haar snelkoppeling werkt altijd — v1.0
+- ✓ Promote genereert version.json op Z: met versies van beide tools — v1.1
+- ✓ Self-update check bij opstart via netwerk share met graceful fallback — v1.1
+- ✓ CTk update dialog met versienummers en Updaten/Later knoppen — v1.1
+- ✓ Exe-swap + automatische herstart na update — v1.1
+- ✓ Productiestructuur tool met eigen config.json en identieke self-update — v1.1
 
 ### Active
 
-- [ ] Promote v1.2.0 naar stable (Z:) + version.json genereren
-- [ ] Self-update check bij opstart: tool vergelijkt versie met version.json op netwerk share en biedt update aan
-- [ ] Productiestructuur tool: eigen config.json + zelfde self-update logica
-- [ ] Evy draait tool lokaal op haar laptop met werkende update via Spinnekop-netwerk
-
-## Current Milestone: v1.1 Config + Self-update
-
-**Goal:** Beide tools (bom-import-tool + productiestructuur) draaien lokaal met config.json, checken bij opstart of er een update is op de netwerk share, en Evy heeft v1.2.0 werkend op haar laptop.
-
-**Target features:**
-- version.json op Z: met versies van beide tools (gegenereerd door promote.ps1)
-- Self-update dialog bij opstart: check `\\10.0.1.5\import` voor nieuwere versie
-- Productiestructuur tool met eigen config.json en self-update
-- Promote v1.2.0 zodat Evy de config-refactoring krijgt
+(None — start next milestone to define new requirements)
 
 ### Out of Scope
 
-- CI/CD pipeline — te zwaar voor 2 gebruikers en 1 tool
+- CI/CD pipeline — te zwaar voor 2 gebruikers en 2 tools
 - Git hosting (GitHub/GitLab) — scripts leven in Obsidian vault, lokale git volstaat
-- Multi-platform builds — alleen Windows, alleen deze server
+- Multi-platform builds — alleen Windows
 - Installer/MSI — exe volstaat, geen installatie nodig
+- Auto-update zonder dialog — gebruiker moet bewust kiezen om te updaten
+- Gedeelde config.json — elke tool eigen config, voorkomt conflicten
+- Update via internet — tools draaien intern, updates via LAN share
 
 ## Context
 
-- **Shipped v1.0** op 2026-02-19 (~55 min totale executie, 3 fasen, 5 plannen)
-- **Config-refactoring v1.2.0** gebouwd en getest op Y: (2026-02-24) — app_config.py, config.json, settings dialog
-- **Evy draait tool lokaal** op haar laptop — heeft geen Z: drive mapping
-- **Update share**: `\\10.0.1.5\import` — Evy kan hier bij als haar laptop op het Spinnekop-netwerk zit
-- **Twee tools**: bom-import-tool.exe + productiestructuur.exe — beide deployen naar dezelfde server
+- **Shipped v1.0** op 2026-02-19 (3 fasen, 5 plannen, ~55 min)
+- **Shipped v1.1** op 2026-02-26 (3 fasen, 5 plannen, ~222 min)
+- **Twee tools live op Z:**
+  - bom-import-tool.exe v1.2.1 (Evy)
+  - productiestructuur.exe v1.0.0 (Jurgen)
+- **Self-update werkt E2E**: version.json check → CTk dialog → exe-swap → herstart via explorer
 - **Codebase**: ~5000 LOC Python + PowerShell in `scripts/`
-- **Build pipeline**: `build.ps1` → `deploy.ps1` → `promote.ps1`
+- **Build pipeline**: PyInstaller → deploy naar Y: → promote naar Z: via promote.ps1
 - **Server**: VMSERVERRUM (10.0.1.5), bereikbaar via VPN + Z:/Y: drive mapping
 - **Dependencies**: customtkinter, xlrd, openpyxl, pyodbc, pyinstaller
 
@@ -62,6 +58,7 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 - **Server toegang**: geen PowerShell Remoting, alleen Z:/Y: drive mapping en RDP
 - **Bash/UNC**: UNC-paden werken niet in bash — altijd via .ps1 scripts
 - **SQL Server**: direct bereikbaar via VPN (poort 1433), geen RDP nodig voor queries
+- **PyInstaller windowed**: `start ""` vanuit CREATE_NO_WINDOW context faalt — gebruik `explorer` voor exe-launch
 
 ## Key Decisions
 
@@ -73,10 +70,12 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 | __version__ in main.py als single source of truth | Importeerbaar zonder circulaire deps, Python conventie | ✓ Good |
 | Y: = import-test, Z: = import (stable) | Logische scheiding test vs productie | ✓ Good |
 | Archive-before-overwrite bij promote | Rollback altijd mogelijk zonder extra tooling | ✓ Good |
-| Setup-scripts niet als admin vereisen | Vermijdt onnodige privilege-escalatie | ✓ Good |
-
-| Eigen config per tool | Beide tools krijgen eigen config.json naast de exe, niet gedeeld | — Pending |
-| Self-update via netwerk share | Evy heeft geen Z: — tool checkt UNC pad rechtstreeks | — Pending |
+| Eigen config per tool | Tools draaien op aparte machines, gedeeld config levert problemen | ✓ Good — v1.1 |
+| Self-update via netwerk share (UNC) | Evy heeft geen Z: — tool checkt UNC pad rechtstreeks | ✓ Good — v1.1 |
+| Threading-based timeout voor share access | Voorkomt 30s hang als share onbereikbaar is | ✓ Good — v1.1 |
+| Two-phase update check (pre-GUI + post-GUI) | Voorkomt CTk dual-root crash | ✓ Good — v1.1 |
+| explorer.exe voor exe-launch na update | start "" vanuit CREATE_NO_WINDOW veroorzaakt PyInstaller DLL failure | ✓ Good — v1.1 |
+| Unblock-File na copy van UNC share | Verwijdert Zone.Identifier ADS, voorkomt Defender blokkade | ✓ Good — v1.1 |
 
 ---
-*Last updated: 2026-02-24 after v1.1 milestone start*
+*Last updated: 2026-02-26 after v1.1 milestone*
