@@ -8,12 +8,25 @@
 
 ## Stappen
 
+### 0. Wheels downloaden (eenmalig, op PC met internet)
+
+De server heeft geen internet. Download Python wheels lokaal:
+
+```powershell
+cd scripts/deploy/locatie-scanner
+pip download -r requirements.txt -d wheels --only-binary :all: --platform win_amd64 --python-version 312
+```
+
+Dit downloadt o.a. `cryptography` (nodig voor SSL certificaat generatie).
+De `wheels/` map wordt automatisch meegekopieerd door het install script.
+
 ### 1. Bestanden klaarzetten
 
 Kopieer naar `Z:\deploy\locatie-scanner\`:
 - `install-service.ps1` (dit script)
 - `requirements.txt`
 - `locatie_scanner.py` (uit `scripts/`)
+- `wheels/` map (uit stap 0)
 
 ### 2. RDP naar server
 
@@ -39,7 +52,10 @@ Het script doet automatisch:
 
 ### 5. Testen
 
-Open op telefoon (in magazijn-wifi): **http://10.0.1.5:5050**
+Open op telefoon (in magazijn-wifi): **https://10.0.1.5:5050**
+
+Bij eerste keer: accepteer de certificaatwaarschuwing (eenmalig, self-signed cert).
+Daarna werkt camera-toegang zonder Chrome flags.
 
 Verwacht:
 - Locatie Scanner laadt

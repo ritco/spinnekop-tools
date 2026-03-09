@@ -8,7 +8,7 @@
 # --- Configuratie ---
 $ServiceName = "LocatieScanner"
 $InstallDir  = "C:\LocatieScanner"
-$PythonExe   = "C:\Users\ridderadmin\AppData\Local\Programs\Python\Python312\python.exe"
+$PythonExe   = "C:\Python312\python.exe"
 $NssmExe     = "$InstallDir\nssm.exe"
 $Port        = 5050
 
@@ -22,30 +22,16 @@ if (-not (Test-Path $PythonExe)) {
 }
 Write-Host "[OK] Python gevonden: $PythonExe" -ForegroundColor Green
 
-# --- 2. Check/download NSSM ---
+# --- 2. Check NSSM ---
 if (-not (Test-Path $NssmExe)) {
-    Write-Host "NSSM niet gevonden in $InstallDir, probeer te downloaden..." -ForegroundColor Yellow
     New-Item -ItemType Directory -Force $InstallDir | Out-Null
-
-    $nssmZip = "$env:TEMP\nssm-2.24.zip"
-    $nssmUrl = "https://nssm.cc/release/nssm-2.24.zip"
-
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri $nssmUrl -OutFile $nssmZip -UseBasicParsing -ErrorAction Stop
-        Write-Host "NSSM gedownload, uitpakken..." -ForegroundColor Cyan
-
-        $extractDir = "$env:TEMP\nssm-extract"
-        if (Test-Path $extractDir) { Remove-Item -Recurse -Force $extractDir }
-        Expand-Archive -Path $nssmZip -DestinationPath $extractDir -Force
-        Copy-Item "$extractDir\nssm-2.24\win64\nssm.exe" $NssmExe -Force
-        Remove-Item -Recurse -Force $extractDir
-        Remove-Item -Force $nssmZip
-        Write-Host "[OK] NSSM geinstalleerd: $NssmExe" -ForegroundColor Green
-    } catch {
-        Write-Host "FOUT: Kan NSSM niet downloaden (geen internet?)." -ForegroundColor Red
-        Write-Host "Download handmatig: $nssmUrl" -ForegroundColor Yellow
-        Write-Host "Kopieer nssm.exe (win64) naar: $NssmExe" -ForegroundColor Yellow
+    $localNssm = Join-Path $ScriptDir "nssm.exe"
+    if (Test-Path $localNssm) {
+        Copy-Item $localNssm $NssmExe -Force
+        Write-Host "[OK] NSSM gekopieerd vanuit deploy map" -ForegroundColor Green
+    } else {
+        Write-Host "FOUT: nssm.exe niet gevonden naast dit script ($ScriptDir)" -ForegroundColor Red
+        Write-Host "Kopieer nssm.exe (win64) naar: $ScriptDir" -ForegroundColor Yellow
         exit 1
     }
 } else {
@@ -77,13 +63,34 @@ if (-not (Test-Path $sourceReq)) {
 
 Copy-Item $sourceApp "$InstallDir\locatie_scanner.py" -Force
 Copy-Item $sourceReq "$InstallDir\requirements.txt" -Force
+
+# Kopieer wheels map als die bestaat (voor offline installatie cryptography)
+$sourceWheels = Join-Path $ScriptDir "wheels"
+if (Test-Path $sourceWheels) {
+    New-Item -ItemType Directory -Force "$InstallDir\wheels" | Out-Null
+    Copy-Item "$sourceWheels\*" "$InstallDir\wheels\" -Force -Recurse
+    Write-Host "[OK] Wheels gekopieerd voor offline installatie" -ForegroundColor Green
+} else {
+    Write-Host "WAARSCHUWING: Geen wheels/ map gevonden naast dit script." -ForegroundColor Yellow
+    Write-Host "  De server heeft geen internet - pip install kan falen voor cryptography." -ForegroundColor Yellow
+    Write-Host "  Draai op een PC met internet:" -ForegroundColor Yellow
+    Write-Host "    pip download -r requirements.txt -d wheels --only-binary :all: --platform win_amd64 --python-version 312" -ForegroundColor Yellow
+}
 Write-Host "[OK] Bestanden gekopieerd" -ForegroundColor Green
 
 # --- 5. Virtuele omgeving en dependencies ---
 Write-Host "Virtuele omgeving aanmaken en dependencies installeren..." -ForegroundColor Cyan
 & $PythonExe -m venv "$InstallDir\venv"
 & "$InstallDir\venv\Scripts\pip.exe" install --upgrade pip -q
-& "$InstallDir\venv\Scripts\pip.exe" install -r "$InstallDir\requirements.txt" -q
+
+$WheelsDir = "$InstallDir\wheels"
+if (Test-Path $WheelsDir) {
+    Write-Host "[5/10] Installeer dependencies (offline via wheels)..." -ForegroundColor Cyan
+    & "$InstallDir\venv\Scripts\pip.exe" install --no-index --find-links "$WheelsDir" -r "$InstallDir\requirements.txt"
+} else {
+    Write-Host "[5/10] Installeer dependencies (online)..." -ForegroundColor Cyan
+    & "$InstallDir\venv\Scripts\pip.exe" install -r "$InstallDir\requirements.txt" -q
+}
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "FOUT: pip install mislukt" -ForegroundColor Red
@@ -120,9 +127,9 @@ Write-Host "Wachten op startup (3 sec)..." -ForegroundColor Cyan
 Start-Sleep -Seconds 3
 
 try {
-    $response = Invoke-WebRequest -Uri "http://localhost:$Port/api/ping" -UseBasicParsing -TimeoutSec 5
+    $response = Invoke-WebRequest -Uri "https://localhost:$Port/api/ping" -UseBasicParsing -TimeoutSec 5 -SkipCertificateCheck
     if ($response.StatusCode -eq 200) {
-        Write-Host "[OK] Locatie Scanner draait op poort $Port!" -ForegroundColor Green
+        Write-Host "[OK] Locatie Scanner draait op HTTPS poort $Port!" -ForegroundColor Green
     } else {
         Write-Host "WAARSCHUWING: Onverwachte status $($response.StatusCode)" -ForegroundColor Yellow
     }
@@ -147,8 +154,8 @@ if (-not $rule) {
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host "  Locatie Scanner is geinstalleerd!" -ForegroundColor Green
-Write-Host "  URL: http://localhost:$Port" -ForegroundColor Cyan
-Write-Host "  Extern: http://10.0.1.5:$Port" -ForegroundColor Cyan
+Write-Host "  URL: https://localhost:$Port" -ForegroundColor Cyan
+Write-Host "  Extern: https://10.0.1.5:$Port" -ForegroundColor Cyan
 Write-Host "  Logs: $InstallDir\logs\service.log" -ForegroundColor Cyan
 Write-Host "  Status: nssm status $ServiceName" -ForegroundColor Cyan
 Write-Host "============================================" -ForegroundColor Cyan
