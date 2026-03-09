@@ -44,10 +44,10 @@
   1. Locatie Scanner is bereikbaar op http://10.0.1.5:5050 vanuit een telefoon in het magazijn-netwerk
   2. Na een server reboot start de Locatie Scanner automatisch opnieuw zonder handmatige actie
   3. Als het Flask-proces crasht, herstart de service het automatisch
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 07-01: TBD
+- [ ] 07-01-PLAN.md — Deploy Locatie Scanner als Windows Service via NSSM
 
 ### Phase 8: HTTPS + Scanner UX
 **Goal**: Camera barcode scanner werkt op elke telefoon zonder handmatige Chrome flags — en toetsenbord stoort niet meer
