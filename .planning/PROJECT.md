@@ -8,6 +8,23 @@ Release management voor de `bom-import-tool.exe` en `productiestructuur.exe`, tw
 
 Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in de ontwikkeling zit.
 
+## Current Milestone: v2.0 Locatie Scanner — Productie
+
+**Goal:** De werkende Locatie Scanner prototype (`scripts/locatie_scanner.py`) omzetten naar een stabiele productietool die magazijniers zelfstandig kunnen gebruiken.
+
+**Prototype context (2026-03-09):**
+- Flask + embedded HTML, single file, camera barcode scanning via html5-qrcode
+- Offline wachtrij (localStorage) voor slechte wifi in magazijn
+- Direct SQL INSERT in R_ITEMWAREHOUSELOCATION (Spinnekop Live 2)
+- Barcodes bevatten PK_R_ITEM — lookup aangepast
+- HTTP poort 5050, camera via Chrome flag workaround
+- Draait op laptop consultant, telefoon verbindt via wifi
+
+**Target features:**
+- Server deploy als Windows Service op VMSERVERRUM (altijd beschikbaar)
+- Gebruiker-identificatie (wie scant wat) met audit trail
+- HTTPS voor camera zonder Chrome flag workaround
+
 ## Requirements
 
 ### Validated
@@ -27,7 +44,7 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 
 ### Active
 
-(None — start next milestone to define new requirements)
+(Defined in REQUIREMENTS.md for v2.0)
 
 ### Out of Scope
 
@@ -59,6 +76,8 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 - **Bash/UNC**: UNC-paden werken niet in bash — altijd via .ps1 scripts
 - **SQL Server**: direct bereikbaar via VPN (poort 1433), geen RDP nodig voor queries
 - **PyInstaller windowed**: `start ""` vanuit CREATE_NO_WINDOW context faalt — gebruik `explorer` voor exe-launch
+- **Wifi magazijn**: slechte dekking door metaal — offline queue vereist
+- **Camera op HTTP**: vereist Chrome flag of HTTPS — Chrome flag is per-device handmatig
 
 ## Key Decisions
 
@@ -76,6 +95,8 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 | Two-phase update check (pre-GUI + post-GUI) | Voorkomt CTk dual-root crash | ✓ Good — v1.1 |
 | explorer.exe voor exe-launch na update | start "" vanuit CREATE_NO_WINDOW veroorzaakt PyInstaller DLL failure | ✓ Good — v1.1 |
 | Unblock-File na copy van UNC share | Verwijdert Zone.Identifier ADS, voorkomt Defender blokkade | ✓ Good — v1.1 |
+| Flask + embedded HTML voor Locatie Scanner | Single file, geen build pipeline, snel te itereren | — Pending |
+| Direct SQL INSERT ipv CSV import | Sneller, real-time feedback, geen import-cyclus | — Pending |
 
 ---
-*Last updated: 2026-02-26 after v1.1 milestone*
+*Last updated: 2026-03-09 after v2.0 milestone start*
