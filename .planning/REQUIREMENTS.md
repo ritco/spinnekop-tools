@@ -46,21 +46,21 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEPL-01 | — | Pending |
-| DEPL-02 | — | Pending |
-| DEPL-03 | — | Pending |
-| UX-01 | — | Pending |
-| USER-01 | — | Pending |
-| USER-02 | — | Pending |
-| USER-03 | — | Pending |
-| CERT-01 | — | Pending |
-| CERT-02 | — | Pending |
+| DEPL-01 | Phase 7 | Pending |
+| DEPL-02 | Phase 7 | Pending |
+| DEPL-03 | Phase 7 | Pending |
+| UX-01 | Phase 8 | Pending |
+| USER-01 | Phase 9 | Pending |
+| USER-02 | Phase 9 | Pending |
+| USER-03 | Phase 9 | Pending |
+| CERT-01 | Phase 8 | Pending |
+| CERT-02 | Phase 8 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 9 total
-- Mapped to phases: 0
-- Unmapped: 9 ⚠️
+- Mapped to phases: 9
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 after initial definition*
+*Last updated: 2026-03-09 after roadmap creation*
