@@ -1,10 +1,14 @@
 """
 Locatie Scanner - Vaste artikellocaties toewijzen in RidderIQ
-Open op telefoon via http://<pc-ip>:5050
+Open op telefoon via https://<pc-ip>:5050
 """
 
+import datetime
+import ipaddress
 import logging
+import os
 import socket
+import ssl
 
 import pyodbc
 from flask import Flask, request, jsonify, render_template_string
@@ -31,7 +35,7 @@ def get_conn_str():
     else:
         server = "10.0.1.5\\RIDDERIQ"
     return (
-        "DRIVER={ODBC Driver 17 for SQL Server};"
+        "DRIVER={ODBC Driver 13 for SQL Server};"
         f"SERVER={server};"
         "DATABASE=Spinnekop Live 2;"
         "UID=ridderadmin;PWD=riad01*;"
@@ -43,6 +47,68 @@ def get_db():
     return pyodbc.connect(get_conn_str())
 
 
+# --- SSL Certificate ---
+def ensure_ssl_cert(cert_dir=None):
+    """Generate self-signed SSL certificate if not present. Returns (cert_path, key_path)."""
+    if cert_dir is None:
+        cert_dir = os.path.dirname(os.path.abspath(__file__))
+
+    cert_path = os.path.join(cert_dir, "cert.pem")
+    key_path = os.path.join(cert_dir, "key.pem")
+
+    if os.path.exists(cert_path) and os.path.exists(key_path):
+        log.info("Using existing SSL cert: %s", cert_path)
+        return cert_path, key_path
+
+    log.info("Generating self-signed SSL certificate...")
+    from cryptography import x509
+    from cryptography.x509.oid import NameOID
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import rsa
+
+    # Generate RSA 2048-bit key
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+
+    subject = issuer = x509.Name([
+        x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Spinnekop"),
+        x509.NameAttribute(NameOID.COMMON_NAME, "Locatie Scanner"),
+    ])
+
+    # SAN with IP and DNS names — critical for Chrome to accept the cert
+    san = x509.SubjectAlternativeName([
+        x509.IPAddress(ipaddress.IPv4Address("10.0.1.5")),
+        x509.DNSName("VMSERVERRUM"),
+        x509.DNSName("localhost"),
+    ])
+
+    cert = (
+        x509.CertificateBuilder()
+        .subject_name(subject)
+        .issuer_name(issuer)
+        .public_key(private_key.public_key())
+        .serial_number(x509.random_serial_number())
+        .not_valid_before(datetime.datetime.now(datetime.timezone.utc))
+        .not_valid_after(datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=3650))
+        .add_extension(san, critical=False)
+        .sign(private_key, hashes.SHA256())
+    )
+
+    # Write key
+    with open(key_path, "wb") as f:
+        f.write(private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.TraditionalOpenSSL,
+            encryption_algorithm=serialization.NoEncryption(),
+        ))
+
+    # Write cert
+    with open(cert_path, "wb") as f:
+        f.write(cert.public_bytes(serialization.Encoding.PEM))
+
+    log.info("SSL certificate generated: %s", cert_path)
+    return cert_path, key_path
+
+
 # --- HTML (single page, mobile-first) ---
 HTML = """
 <!DOCTYPE html>
@@ -51,51 +117,58 @@ HTML = """
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Locatie Scanner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, system-ui, sans-serif; background: #f5f5f5; padding: 16px; }
-h1 { font-size: 20px; margin-bottom: 12px; color: #1a1a2e; }
-.card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-label { font-size: 14px; font-weight: 600; color: #555; display: block; margin-bottom: 4px; }
-input[type=text] { width: 100%; padding: 14px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; }
-input[type=text]:focus { border-color: #4a90d9; outline: none; }
-.locked input { background: #e8f5e9; border-color: #4caf50; }
-button { width: 100%; padding: 14px; font-size: 16px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; }
-.btn-lock { background: #4caf50; color: white; }
-.btn-unlock { background: #ff9800; color: white; }
-.btn-scan { background: #4a90d9; color: white; font-size: 18px; padding: 16px; }
-.btn-scan.active { background: #c62828; }
-.btn-save { background: #1a1a2e; color: white; font-size: 18px; padding: 16px; }
-.btn-save:disabled { background: #999; }
+body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: #F8FAFC; padding: 16px; color: #334155; }
+h1 { font-size: 20px; margin-bottom: 12px; color: #334155; }
+.card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+label { font-size: 14px; font-weight: 600; color: #64748B; display: block; margin-bottom: 4px; }
+input[type=text] { width: 100%; padding: 14px; font-size: 18px; border: 2px solid #CBD5E1; border-radius: 8px; font-family: 'Inter', sans-serif; color: #334155; transition: border-color 150ms ease; }
+input[type=text]:focus { border-color: #F97316; outline: none; box-shadow: 0 0 0 3px rgba(249,115,22,0.15); }
+.locked input { background: #F0FDF4; border-color: #4caf50; }
+button { width: 100%; padding: 14px; font-size: 16px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; min-height: 44px; min-width: 44px; transition: all 150ms ease; font-family: 'Inter', sans-serif; }
+button:active { transform: scale(0.97); }
+.btn-lock { background: #F97316; color: white; }
+.btn-lock:active { background: #EA580C; }
+.btn-unlock { background: #64748B; color: white; }
+.btn-unlock:active { background: #475569; }
+.btn-scan { background: #64748B; color: white; font-size: 18px; padding: 16px; }
+.btn-scan.active { background: #DC2626; }
+.btn-save { background: #F97316; color: white; font-size: 18px; padding: 16px; }
+.btn-save:disabled { background: #CBD5E1; color: #94A3B8; }
 .status { padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 14px; }
-.status.ok { background: #e8f5e9; color: #2e7d32; }
-.status.err { background: #ffebee; color: #c62828; }
-.status.info { background: #e3f2fd; color: #1565c0; }
+.status.ok { background: #F0FDF4; color: #16A34A; }
+.status.err { background: #FEF2F2; color: #DC2626; }
+.status.info { background: #FFF7ED; color: #EA580C; }
 .log { margin-top: 8px; max-height: 300px; overflow-y: auto; }
-.log-item { padding: 8px; border-bottom: 1px solid #eee; font-size: 14px; }
-.log-item .code { font-weight: 700; font-size: 16px; }
-.log-item .desc { color: #666; }
-.count { font-size: 32px; font-weight: 700; color: #1a1a2e; text-align: center; }
+.log-item { padding: 8px; border-bottom: 1px solid #F1F5F9; font-size: 14px; }
+.log-item .code { font-weight: 700; font-size: 16px; color: #334155; }
+.log-item .desc { color: #64748B; }
+.count { font-size: 32px; font-weight: 700; color: #F97316; text-align: center; }
 #artikelInput { font-size: 22px; text-align: center; letter-spacing: 2px; }
 #scanner { width: 100%; margin-top: 8px; }
 .input-row { display: flex; gap: 8px; align-items: stretch; }
 .input-row input { flex: 1; }
 .input-row button { width: auto; min-width: 60px; margin-top: 0; padding: 14px; }
-.btn-mini-scan { background: #4a90d9; color: white; font-size: 20px; border-radius: 8px; border: none; }
+.btn-mini-scan { background: #64748B; color: white; font-size: 20px; border-radius: 8px; border: none; cursor: pointer; min-height: 44px; min-width: 44px; transition: all 150ms ease; }
+.btn-mini-scan:active { background: #475569; transform: scale(0.95); }
 .wifi-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; font-weight: 600; }
-.wifi-bar.online { background: #e8f5e9; color: #2e7d32; }
-.wifi-bar.offline { background: #ffebee; color: #c62828; }
+.wifi-bar.online { background: #F0FDF4; color: #16A34A; }
+.wifi-bar.offline { background: #FEF2F2; color: #DC2626; }
 .wifi-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
-.wifi-bar.online .dot { background: #4caf50; }
-.wifi-bar.offline .dot { background: #c62828; animation: blink 1s infinite; }
+.wifi-bar.online .dot { background: #16A34A; }
+.wifi-bar.offline .dot { background: #DC2626; animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: 0.3; } }
-.queue-badge { background: #ff9800; color: white; border-radius: 12px; padding: 2px 8px; font-size: 12px; margin-left: auto; }
+.queue-badge { background: #F97316; color: white; border-radius: 12px; padding: 2px 8px; font-size: 12px; margin-left: auto; }
 #scanCard { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 100; margin: 0; border-radius: 0; flex-direction: column; background: black; display: none; }
 #scanCard.open { display: flex; }
 #scanCard label { color: white; text-align: center; padding: 12px 16px; font-size: 18px; background: rgba(0,0,0,0.8); margin: 0; }
 #scanner { flex: 1; min-height: 0; }
-#scanCard button { border-radius: 0; margin: 0; flex-shrink: 0; padding: 18px; font-size: 20px; }
+#scanCard button { border-radius: 0; margin: 0; flex-shrink: 0; padding: 18px; font-size: 20px; min-height: 56px; }
 </style>
 </head>
 <body>
@@ -232,6 +305,9 @@ artInput.addEventListener('keydown', e => {
 
 // --- Live camera barcode scanner ---
 function startScan(target) {
+  // Sluit virtueel toetsenbord door actief element te blurren
+  if (document.activeElement) { document.activeElement.blur(); }
+
   scanTarget = target;
   var scanCard = document.getElementById('scanCard');
   var scannerDiv = document.getElementById('scanner');
@@ -354,15 +430,16 @@ async function saveArtikel() {
 
     document.getElementById('saveBtn').disabled = false;
 
+    var loc = locInput.value.trim();
     if (data.error) {
       showStatus('artStatus', data.error, 'err');
     } else if (data.exists) {
-      showStatus('artStatus', '⚠ ' + (data.artikel || code) + ' stond al op deze locatie', 'info');
+      showStatus('artStatus', '⚠ ' + (data.artikel || code) + ' stond al op ' + loc, 'info');
     } else {
       count++;
       document.getElementById('scanCount').textContent = count;
-      showStatus('artStatus', '✓ Opgeslagen: ' + (data.artikel || code) + ' - ' + data.description, 'ok');
-      addLog(data.artikel || code, data.description);
+      showStatus('artStatus', '✓ ' + (data.artikel || code) + ' → ' + loc + ' (' + data.description + ')', 'ok');
+      addLog(data.artikel || code, loc + ' — ' + data.description);
     }
   } catch(e) {
     // Geen verbinding → in wachtrij
@@ -515,10 +592,15 @@ if __name__ == "__main__":
 
     log.info("Starting Locatie Scanner — mode: %s", server_mode)
 
+    # Generate or load SSL certificate
+    cert_path, key_path = ensure_ssl_cert()
+    log.info("SSL cert: %s", cert_path)
+
     print(f"\n{'='*50}")
-    print(f"  Locatie Scanner draait!")
+    print(f"  Locatie Scanner draait! (HTTPS)")
     print(f"  Mode:     {server_mode}")
-    print(f"  PC:       http://localhost:5050")
-    print(f"  Telefoon: http://{local_ip}:5050")
+    print(f"  PC:       https://localhost:5050")
+    print(f"  Telefoon: https://{local_ip}:5050")
+    print(f"  SSL cert: {cert_path}")
     print(f"{'='*50}\n")
-    app.run(host="0.0.0.0", port=5050, debug=False)
+    app.run(host="0.0.0.0", port=5050, debug=False, ssl_context=(cert_path, key_path))
