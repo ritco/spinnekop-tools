@@ -57,10 +57,10 @@ Plans:
   1. Magazijnier opent https://10.0.1.5:5050 op zijn telefoon en camera start zonder Chrome flag workaround
   2. Telefoon toont geen certificaatwaarschuwing (of eenmalig accepteren, daarna niet meer)
   3. Wanneer de camera scanner opent, sluit het virtuele toetsenbord automatisch
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 08-01: TBD
+- [ ] 08-01-PLAN.md — HTTPS met self-signed cert + keyboard UX fix
 
 ### Phase 9: Gebruiker-identificatie
 **Goal**: Elke scan is traceerbaar naar een persoon — magazijniers selecteren wie ze zijn, en een audit log toont de geschiedenis
