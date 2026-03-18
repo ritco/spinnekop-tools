@@ -60,17 +60,7 @@ Write-Host "  (kan 1-2 minuten duren, ~35MB)" -ForegroundColor DarkGray
 
 $exe_path = Join-Path $install_dir $EXE_NAME
 try {
-    $curl = Get-Command curl.exe -ErrorAction SilentlyContinue
-    if ($curl) {
-        Write-Host "  (via curl.exe)" -ForegroundColor DarkGray
-        & curl.exe -L -s -o $exe_path $download_url
-        if ($LASTEXITCODE -ne 0) { throw "curl.exe exit code $LASTEXITCODE" }
-    } else {
-        Write-Host "  (via WebClient)" -ForegroundColor DarkGray
-        $wc2 = New-Object System.Net.WebClient
-        $wc2.Headers.Add("User-Agent", "spinnekop-installer")
-        $wc2.DownloadFile($download_url, $exe_path)
-    }
+    Invoke-WebRequest -Uri $download_url -OutFile $exe_path -TimeoutSec 180 -UseBasicParsing
     Unblock-File -Path $exe_path
     Write-Host "Download klaar: $exe_path" -ForegroundColor Green
 }
