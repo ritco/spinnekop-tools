@@ -83,6 +83,15 @@ catch {
     exit 1
 }
 
+# --- SQL wachtwoord vragen en encrypteren ---
+Write-Host ""
+Write-Host "SQL Server wachtwoord instellen..." -ForegroundColor Yellow
+Write-Host "  Server : 10.0.1.5\RIDDERIQ" -ForegroundColor DarkGray
+Write-Host "  Login  : ridderadmin" -ForegroundColor DarkGray
+Write-Host ""
+$sql_secure  = Read-Host "SQL wachtwoord" -AsSecureString
+$sql_dpapi   = "dpapi:" + (ConvertFrom-SecureString $sql_secure)
+
 # --- config.json aanmaken (als die nog niet bestaat) ---
 $config_path = Join-Path $install_dir "config.json"
 if (-not (Test-Path $config_path)) {
@@ -90,7 +99,7 @@ if (-not (Test-Path $config_path)) {
         sql_server         = "10.0.1.5\RIDDERIQ"
         sql_auth           = "sql"
         sql_user           = "ridderadmin"
-        sql_password       = "riad01*"
+        sql_password       = $sql_dpapi
         databases          = @{
             speel = "Speeltuin 2"
             live  = "Spinnekop Live 2"
