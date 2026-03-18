@@ -93,12 +93,14 @@ gh release create bom-v1.2.3-test \
 
 ### Naamconventies releases
 
-| Patroon | Tool | Kanaal |
-|---------|------|--------|
-| `bom-v1.2.3` | BOM Import Tool | Stabiel (live) |
-| `bom-v1.2.3-test` | BOM Import Tool | Prerelease (test) |
-| `prod-v1.0.2` | Productiestructuur | Stabiel (live) |
-| `prod-v1.0.2-test` | Productiestructuur | Prerelease (test) |
+| Patroon | Tool | exe naam | Kanaal |
+|---------|------|----------|--------|
+| `bom-v1.2.3` | BOM Import Tool | `bom-import-tool.exe` | Stabiel (live) |
+| `bom-v1.2.3-test` | BOM Import Tool | `bom-import-tool.exe` | Prerelease (test) |
+| `productiestructuur-v1.0.2` | Productiestructuur | `productiestructuur.exe` | Stabiel (live) |
+| `productiestructuur-v1.0.2-test` | Productiestructuur | `productiestructuur.exe` | Prerelease (test) |
+
+> **Regel**: de tag begint altijd met de tool-naam (of het eerste woord ervan), gevolgd door `-v`. De tool herkent zijn eigen releases automatisch op basis van dit prefix.
 
 ---
 
