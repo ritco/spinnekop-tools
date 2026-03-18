@@ -71,7 +71,7 @@ if (-not (Test-Path $config_path)) {
         sql_server         = "10.0.1.5\RIDDERIQ"
         sql_auth           = "sql"
         sql_user           = "ridderadmin"
-        sql_password       = "INVULLEN"
+        sql_password       = "riad01*"
         databases          = @{
             speel = "Speeltuin 2"
             live  = "Spinnekop Live 2"
@@ -82,7 +82,6 @@ if (-not (Test-Path $config_path)) {
     }
     $config | ConvertTo-Json -Depth 3 | Set-Content -Path $config_path -Encoding UTF8
     Write-Host "config.json aangemaakt: $config_path" -ForegroundColor Green
-    Write-Host "  >> Vul sql_password in voor je de tool start!" -ForegroundColor Yellow
 } else {
     Write-Host "config.json bestaat al — niet overschreven." -ForegroundColor Cyan
 }
@@ -113,11 +112,6 @@ Write-Host "  Versie  : $version"
 Write-Host "  Locatie : $install_dir"
 Write-Host "  Kanaal  : LIVE (alleen stabiele updates)"
 Write-Host ""
-if ((Get-Content $config_path | Select-String "INVULLEN").Count -gt 0) {
-    Write-Host "  ACTIE VEREIST: open config.json en vul sql_password in." -ForegroundColor Yellow
-    Write-Host "  Bestand: $config_path" -ForegroundColor Yellow
-    Write-Host ""
-}
 Write-Host "  De tool controleert automatisch op updates bij elke opstart."
 Write-Host ""
 Read-Host "Druk op Enter om te sluiten"
