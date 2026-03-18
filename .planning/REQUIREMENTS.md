@@ -36,6 +36,11 @@
 - [ ] **GUI-03**: Validatieresultaten worden getoond per categorie: gevonden artikelen, nieuwe artikelen, overgeslagen rijen, blokkerende fouten (AnalysisFrame)
 - [ ] **GUI-04**: Na goedkeuring genereert de tool outputbestanden (CSV + SQL) en toont stapsgewijze importinstructies
 
+### History & Logging
+
+- [ ] **HIST-01**: Elke import wordt gelogd via `history.py` (datum, bestand, omgeving, status, aantallen gevonden/nieuw/overgeslagen/fouten)
+- [ ] **HIST-02**: Recente imports zijn zichtbaar in de StartFrame (zelfde patroon als BOM Import Tool)
+
 ### Build & Deploy
 
 - [ ] **BUILD-01**: Tool gebouwd als standalone exe via PyInstaller (`eplan-import-tool.exe`), entry point `scripts/eplan_main.py`
@@ -66,31 +71,33 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PARSE-01 | TBD | Pending |
-| PARSE-02 | TBD | Pending |
-| PARSE-03 | TBD | Pending |
-| MATCH-01 | TBD | Pending |
-| MATCH-02 | TBD | Pending |
-| MATCH-03 | TBD | Pending |
-| MATCH-04 | TBD | Pending |
-| ART-01 | TBD | Pending |
-| ART-02 | TBD | Pending |
-| BOM-01 | TBD | Pending |
-| BOM-02 | TBD | Pending |
-| BOM-03 | TBD | Pending |
-| GUI-01 | TBD | Pending |
-| GUI-02 | TBD | Pending |
-| GUI-03 | TBD | Pending |
-| GUI-04 | TBD | Pending |
-| BUILD-01 | TBD | Pending |
-| BUILD-02 | TBD | Pending |
-| BUILD-03 | TBD | Pending |
+| PARSE-01 | Phase 11 | Pending |
+| PARSE-02 | Phase 11 | Pending |
+| PARSE-03 | Phase 11 | Pending |
+| MATCH-01 | Phase 11 | Pending |
+| MATCH-02 | Phase 11 | Pending |
+| MATCH-03 | Phase 11 | Pending |
+| MATCH-04 | Phase 11 | Pending |
+| ART-01 | Phase 11 | Pending |
+| ART-02 | Phase 11 | Pending |
+| BOM-01 | Phase 11 | Pending |
+| BOM-02 | Phase 11 | Pending |
+| BOM-03 | Phase 11 | Pending |
+| GUI-01 | Phase 12 | Pending |
+| GUI-02 | Phase 12 | Pending |
+| GUI-03 | Phase 12 | Pending |
+| GUI-04 | Phase 12 | Pending |
+| HIST-01 | Phase 12 | Pending |
+| HIST-02 | Phase 12 | Pending |
+| BUILD-01 | Phase 13 | Pending |
+| BUILD-02 | Phase 13 | Pending |
+| BUILD-03 | Phase 13 | Pending |
 
 **Coverage:**
-- v1 requirements: 19 total
-- Mapped to phases: TBD
-- Unmapped: TBD
+- v1 requirements: 21 total
+- Mapped to phases: 21
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 — traceability filled after roadmap creation*
