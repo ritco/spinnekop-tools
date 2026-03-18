@@ -1,18 +1,12 @@
 # =============================================================================
-# BOM Import Tool — Installatie (LIVE / stabiele versies)
+# BOM Import Tool - Installatie (LIVE / stabiele versies)
 # =============================================================================
-# Wat dit script doet:
-#   1. Vraagt waar de tool geinstalleerd moet worden
-#   2. Downloadt de laatste stabiele versie van GitHub
-#   3. Maakt config.json aan (SQL-instellingen invullen na installatie)
-#   4. Maakt een snelkoppeling op het bureaublad
-#
-# Gebruik: rechtsklik → "Uitvoeren met PowerShell"
+# Gebruik: PowerShell -ExecutionPolicy Bypass -File install-live.ps1
 # =============================================================================
 
 $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$TOOL_NAME    = "bom-import-tool"
+
 $EXE_NAME     = "bom-import-tool.exe"
 $GITHUB_REPO  = "ritco/spinnekop-tools"
 $CHANNEL      = "stable"
@@ -27,54 +21,66 @@ Write-Host ""
 # --- Installatiemap kiezen ---
 $default_dir = "C:\Tools\BOM-Import"
 $install_dir = Read-Host "Installatiemap [$default_dir]"
-if ([string]::IsNullOrWhiteSpace($install_dir)) {
-    $install_dir = $default_dir
-}
+if ([string]::IsNullOrWhiteSpace($install_dir)) { $install_dir = $default_dir }
 
 if (-not (Test-Path $install_dir)) {
     New-Item -ItemType Directory -Path $install_dir -Force | Out-Null
     Write-Host "Map aangemaakt: $install_dir" -ForegroundColor Green
 }
 
-# --- Download exe van GitHub ---
+# --- GitHub release opzoeken ---
 Write-Host ""
-Write-Host "Laatste versie ophalen van GitHub..." -ForegroundColor Yellow
+Write-Host "Stap 1/3: Release opzoeken op GitHub..." -ForegroundColor Yellow
 
 try {
-    $release_url = "https://api.github.com/repos/$GITHUB_REPO/releases/latest"
-    $headers = @{ "User-Agent" = "spinnekop-installer"; "Accept" = "application/vnd.github.v3+json" }
-    $release  = Invoke-RestMethod -Uri $release_url -Headers $headers -TimeoutSec 15
-    $asset    = $release.assets | Where-Object { $_.name -eq $EXE_NAME } | Select-Object -First 1
+    $wc = New-Object System.Net.WebClient
+    $wc.Headers.Add("User-Agent", "spinnekop-installer")
+    $wc.Headers.Add("Accept", "application/vnd.github.v3+json")
 
-    if (-not $asset) {
-        throw "Geen '$EXE_NAME' gevonden in release $($release.tag_name)"
-    }
+    $json    = $wc.DownloadString("https://api.github.com/repos/$GITHUB_REPO/releases/latest")
+    $release = $json | ConvertFrom-Json
+    $asset   = $release.assets | Where-Object { $_.name -eq $EXE_NAME } | Select-Object -First 1
 
-    $version     = $release.tag_name -replace '[^\d\.]', ''
-    $exe_path    = Join-Path $install_dir $EXE_NAME
+    if (-not $asset) { throw "Geen '$EXE_NAME' gevonden in release $($release.tag_name)" }
 
-    Write-Host "Downloaden: $EXE_NAME v$version..." -ForegroundColor Yellow
-    Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $exe_path -TimeoutSec 120
+    $version      = $release.tag_name -replace '[^\d\.]', ''
+    $download_url = $asset.browser_download_url
+    Write-Host "Gevonden: v$version" -ForegroundColor Green
+}
+catch {
+    Write-Host "FOUT bij opzoeken release: $_" -ForegroundColor Red
+    Read-Host "Druk op Enter om te sluiten"
+    exit 1
+}
+
+# --- Exe downloaden ---
+Write-Host ""
+Write-Host "Stap 2/3: Downloaden $EXE_NAME v$version..." -ForegroundColor Yellow
+Write-Host "  (kan 1-2 minuten duren, ~35MB)" -ForegroundColor DarkGray
+
+$exe_path = Join-Path $install_dir $EXE_NAME
+try {
+    $wc2 = New-Object System.Net.WebClient
+    $wc2.DownloadFile($download_url, $exe_path)
     Unblock-File -Path $exe_path
     Write-Host "Download klaar: $exe_path" -ForegroundColor Green
 }
 catch {
     Write-Host "FOUT bij downloaden: $_" -ForegroundColor Red
-    Write-Host "Controleer je internetverbinding en probeer opnieuw."
     Read-Host "Druk op Enter om te sluiten"
     exit 1
 }
 
-# --- SQL wachtwoord vragen en encrypteren ---
+# --- SQL wachtwoord ---
 Write-Host ""
-Write-Host "SQL Server wachtwoord instellen..." -ForegroundColor Yellow
+Write-Host "Stap 3/3: SQL Server wachtwoord instellen..." -ForegroundColor Yellow
 Write-Host "  Server : 10.0.1.5\RIDDERIQ" -ForegroundColor DarkGray
 Write-Host "  Login  : ridderadmin" -ForegroundColor DarkGray
 Write-Host ""
-$sql_secure  = Read-Host "SQL wachtwoord" -AsSecureString
-$sql_dpapi   = "dpapi:" + (ConvertFrom-SecureString $sql_secure)
+$sql_secure = Read-Host "SQL wachtwoord" -AsSecureString
+$sql_dpapi  = "dpapi:" + (ConvertFrom-SecureString $sql_secure)
 
-# --- config.json aanmaken (als die nog niet bestaat) ---
+# --- config.json ---
 $config_path = Join-Path $install_dir "config.json"
 if (-not (Test-Path $config_path)) {
     $config = @{
@@ -82,10 +88,7 @@ if (-not (Test-Path $config_path)) {
         sql_auth           = "sql"
         sql_user           = "ridderadmin"
         sql_password       = $sql_dpapi
-        databases          = @{
-            speel = "Speeltuin 2"
-            live  = "Spinnekop Live 2"
-        }
+        databases          = @{ speel = "Speeltuin 2"; live = "Spinnekop Live 2" }
         output_basis       = $install_dir
         update_github_repo = $GITHUB_REPO
         update_channel     = $CHANNEL
@@ -96,12 +99,12 @@ if (-not (Test-Path $config_path)) {
     Write-Host "config.json bestaat al - niet overschreven." -ForegroundColor Cyan
 }
 
-# --- Snelkoppeling op bureaublad ---
+# --- Snelkoppeling ---
 try {
-    $desktop    = [Environment]::GetFolderPath("Desktop")
-    $shortcut   = Join-Path $desktop "$DISPLAY_NAME.lnk"
-    $wsh        = New-Object -ComObject WScript.Shell
-    $lnk        = $wsh.CreateShortcut($shortcut)
+    $desktop  = [Environment]::GetFolderPath("Desktop")
+    $shortcut = Join-Path $desktop "$DISPLAY_NAME.lnk"
+    $wsh      = New-Object -ComObject WScript.Shell
+    $lnk      = $wsh.CreateShortcut($shortcut)
     $lnk.TargetPath       = Join-Path $install_dir $EXE_NAME
     $lnk.WorkingDirectory = $install_dir
     $lnk.Description      = "$DISPLAY_NAME (live)"
