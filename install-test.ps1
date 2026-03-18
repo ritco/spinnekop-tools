@@ -11,6 +11,7 @@
 # =============================================================================
 
 $ErrorActionPreference = "Stop"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $TOOL_NAME    = "bom-import-tool"
 $EXE_NAME     = "bom-import-tool.exe"
 $GITHUB_REPO  = "ritco/spinnekop-tools"
