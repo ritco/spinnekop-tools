@@ -8,22 +8,29 @@ Release management voor de `bom-import-tool.exe` en `productiestructuur.exe`, tw
 
 Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in de ontwikkeling zit.
 
-## Current Milestone: v2.0 Locatie Scanner — Productie
+## Current Milestone: v3.0 ePlan Import Tool
+
+**Goal:** Een tweede import tool bouwen naast de BOM Import Tool — leest ePlan stuklijst-exports (Excel), koppelt componenten aan bestaande RidderIQ-artikelen of maakt nieuwe aan, en importeert stuklijsten + regels klaar voor gebruik in productiebons.
+
+**Context (2026-03-18):**
+- ePlan exporteert materiaalslijst als Excel: Project naam, Naam in schema, Fabrikant, Bestelnummer (format: `Fabrikant.Onderdeel`), Hoeveelheid
+- Onderdeel-nummer (`GV2ME08` uit `SE.GV2ME08`) zit in artikelomschrijving in RidderIQ
+- Elektrische componenten: handmatig afboeken (REGISTRATIONPATH=5), stock nooit negatief (INVENTORYKIND=4)
+- Zelfde tech stack en build/deploy pipeline als BOM Import Tool
+
+**Target features:**
+- ePlan Excel inlezen en kwaliteitscontrole uitvoeren
+- Artikelen opzoeken in RidderIQ op basis van Bestelnummer
+- Nieuwe artikelen aanmaken als ze niet bestaan (groep 26, 26xxx codes)
+- Stuklijst header + regels genereren en importeren
+- CustomTkinter GUI (zelfde patroon als gui.py)
+- Build + deploy via GitHub releases, tag prefix `eplan-`
+
+## Previous Milestone: v2.0 Locatie Scanner — Productie
 
 **Goal:** De werkende Locatie Scanner prototype (`scripts/locatie_scanner.py`) omzetten naar een stabiele productietool die magazijniers zelfstandig kunnen gebruiken.
 
-**Prototype context (2026-03-09):**
-- Flask + embedded HTML, single file, camera barcode scanning via html5-qrcode
-- Offline wachtrij (localStorage) voor slechte wifi in magazijn
-- Direct SQL INSERT in R_ITEMWAREHOUSELOCATION (Spinnekop Live 2)
-- Barcodes bevatten PK_R_ITEM — lookup aangepast
-- HTTP poort 5050, camera via Chrome flag workaround
-- Draait op laptop consultant, telefoon verbindt via wifi
-
-**Target features:**
-- Server deploy als Windows Service op VMSERVERRUM (altijd beschikbaar)
-- Gebruiker-identificatie (wie scant wat) met audit trail
-- HTTPS voor camera zonder Chrome flag workaround
+**Status:** Phase 7+8 shipped (2026-03-11). Phase 9 (gebruiker-identificatie) geparkeerd.
 
 ## Requirements
 
@@ -54,7 +61,8 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 - Installer/MSI — exe volstaat, geen installatie nodig
 - Auto-update zonder dialog — gebruiker moet bewust kiezen om te updaten
 - Gedeelde config.json — elke tool eigen config, voorkomt conflicten
-- Update via internet — tools draaien intern, updates via LAN share
+- Update via internet — tools draaien intern, updates via GitHub releases (via HTTPS)
+- Locatie Scanner gebruiker-identificatie (Phase 9) — geparkeerd, later
 
 ## Context
 
@@ -99,4 +107,4 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 | Direct SQL INSERT ipv CSV import | Sneller, real-time feedback, geen import-cyclus | — Pending |
 
 ---
-*Last updated: 2026-03-09 after v2.0 milestone start*
+*Last updated: 2026-03-18 after v3.0 milestone start*
