@@ -19,7 +19,7 @@ $DISPLAY_NAME = "BOM Import Tool"
 
 Write-Host ""
 Write-Host "=============================================" -ForegroundColor Cyan
-Write-Host "  $DISPLAY_NAME — Installatie (LIVE)"        -ForegroundColor Cyan
+Write-Host "  $DISPLAY_NAME - Installatie (LIVE)"        -ForegroundColor Cyan
 Write-Host "=============================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -92,7 +92,7 @@ if (-not (Test-Path $config_path)) {
     $config | ConvertTo-Json -Depth 3 | Set-Content -Path $config_path -Encoding UTF8
     Write-Host "config.json aangemaakt: $config_path" -ForegroundColor Green
 } else {
-    Write-Host "config.json bestaat al — niet overschreven." -ForegroundColor Cyan
+    Write-Host "config.json bestaat al - niet overschreven." -ForegroundColor Cyan
 }
 
 # --- Snelkoppeling op bureaublad ---

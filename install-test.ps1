@@ -19,7 +19,7 @@ $DISPLAY_NAME = "BOM Import Tool"
 
 Write-Host ""
 Write-Host "=============================================" -ForegroundColor Magenta
-Write-Host "  $DISPLAY_NAME — Installatie (TEST)"        -ForegroundColor Magenta
+Write-Host "  $DISPLAY_NAME - Installatie (TEST)"        -ForegroundColor Magenta
 Write-Host "=============================================" -ForegroundColor Magenta
 Write-Host ""
 
@@ -53,7 +53,7 @@ try {
 
     # Als geen pre-release gevonden, gebruik stabiele versie
     if (-not $release) {
-        Write-Host "Geen pre-release gevonden — meest recente stabiele versie wordt gebruikt." -ForegroundColor Yellow
+        Write-Host "Geen pre-release gevonden - meest recente stabiele versie wordt gebruikt." -ForegroundColor Yellow
         $release = $releases | Where-Object {
             $_.tag_name -like "$tool_prefix*"
         } | Select-Object -First 1
@@ -111,7 +111,7 @@ if (-not (Test-Path $config_path)) {
     $config | ConvertTo-Json -Depth 3 | Set-Content -Path $config_path -Encoding UTF8
     Write-Host "config.json aangemaakt: $config_path" -ForegroundColor Green
 } else {
-    Write-Host "config.json bestaat al — niet overschreven." -ForegroundColor Cyan
+    Write-Host "config.json bestaat al - niet overschreven." -ForegroundColor Cyan
 }
 
 # --- Snelkoppeling op bureaublad ---
