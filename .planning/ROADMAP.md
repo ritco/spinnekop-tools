@@ -140,16 +140,17 @@ Plans:
 ### Phase 13: Build & Deploy
 **Goal**: eplan-import-tool.exe is beschikbaar als standalone executable, volgt de GitHub release pipeline en kan worden geinstalleerd via scripts
 **Depends on**: Phase 12
-**Requirements**: BUILD-01, BUILD-02, BUILD-03
+**Requirements**: BUILD-01, BUILD-02, BUILD-03, LOG-01
 **Success Criteria** (what must be TRUE):
   1. `eplan-import-tool.exe` start op een machine zonder Python installatie en toont de GUI zonder foutmeldingen
   2. Bij een nieuwe release controleert de tool bij opstart of er een update beschikbaar is en biedt aan te updaten via dezelfde CTk dialog als de BOM Import Tool
   3. `install-live.ps1` en `install-test.ps1` installeren de exe op de correcte serverlocatie met een ping-check voordat ze kopiëren
-**Plans**: 2 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 13-01-PLAN.md — PyInstaller spec + install scripts + workflow doc update (BUILD-02, BUILD-03)
-- [ ] 13-02-PLAN.md — Build exe + GitHub release eplan-v1.0.0 + checkpoint GUI verificatie (BUILD-01, BUILD-02)
+- [x] 13-01-PLAN.md — PyInstaller spec + install scripts + workflow doc update (BUILD-02, BUILD-03) ✅
+- [x] 13-02-PLAN.md — Build exe + GitHub release eplan-v1.0.0 + checkpoint GUI verificatie (BUILD-01, BUILD-02) ✅
+- [ ] 13-03-PLAN.md — ePlan audit logging naar SpinnekopTools.EPLAN_IMPORT_LOG (LOG-01)
 
 ### Phase 14: DB + Infrastructuur
 **Goal**: `Spinnekop_Reporting` bestaat op de SQL Server met de drie schemas, een gevulde kalender-tabel en een werkende ETL-controle tabel — het fundament waarop alle volgende lagen bouwen
