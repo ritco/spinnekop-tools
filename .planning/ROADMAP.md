@@ -40,7 +40,7 @@
 
 **Milestone Goal:** Een tweede import tool naast de BOM Import Tool — leest ePlan stuklijst-exports, koppelt componenten aan bestaande RidderIQ-artikelen of maakt nieuwe aan, en importeert stuklijsten klaar voor gebruik in productiebons.
 
-- [ ] **Phase 11: Core Converter** - Headless engine: parse ePlan Excel, match artikelen, genereer output bestanden
+- [x] **Phase 11: Core Converter** - Headless engine: parse ePlan Excel, match artikelen, genereer output bestanden (completed 2026-03-19)
 - [ ] **Phase 12: GUI** - CustomTkinter interface maakt de converter bruikbaar voor Evy
 - [ ] **Phase 13: Build & Deploy** - Standalone exe via PyInstaller, GitHub release pipeline, installatiescripts
 
@@ -233,7 +233,7 @@ Plans:
 | 7. Server Deployment | v2.0 | 1/1 | Complete | 2026-03-09 |
 | 8. HTTPS + Scanner UX | v2.0 | 1/1 | Complete | 2026-03-11 |
 | 9. Gebruiker-identificatie | v2.0 | 0/1 | Not started | - |
-| 11. Core Converter | 1/2 | In Progress|  | - |
+| 11. Core Converter | 2/2 | Complete   | 2026-03-19 | - |
 | 12. GUI | v3.0 | 0/? | Not started | - |
 | 13. Build & Deploy | v3.0 | 0/? | Not started | - |
 | 14. DB + Infrastructuur | v4.0 | 0/? | Not started | - |

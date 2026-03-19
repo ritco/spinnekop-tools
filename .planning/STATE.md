@@ -36,6 +36,7 @@ Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 
 - Stable (complexity-adjusted)
 
 | Phase 11 P01 | 5 min | 2 tasks | 1 file |
+| Phase 11 P02 | 8 min | 2 tasks | 1 file |
 
 ## Accumulated Context
 
@@ -53,6 +54,8 @@ Recent decisions affecting current work:
 - [v3.0]: Output: 3 bestanden (01-nieuwe-artikelen-eplan.csv, 02-stuklijst-header.csv, 03-stuklijstregels.sql)
 - [Phase 11]: Import-fallback voor app_config: try direct, except sys.path.insert scripts/
 - [Phase 11]: Lokale 26xxx teller: MAX query eenmalig voor de lus, teller verhogen per nieuw artikel
+- [Phase 11-core-converter]: Header-constanten als module-level exports (ARTIKEL_HEADERS etc.) zodat test-scripts en de GUI ze kunnen importeren zonder write_output te moeten aanroepen
+- [Phase 11-core-converter]: Duplicaatcheck opent een tweede connectie na match_components omdat conn al gesloten is in de finally-block van stap 4
 
 ### Roadmap Evolution
 
@@ -73,5 +76,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Completed 11-01-PLAN.md — eplan_converter.py datamodel, parser en SQL-matching
+Stopped at: Completed 11-02-PLAN.md — eplan_converter.py output-generatie, CSV header constanten en stuklijst-duplicaatcheck
 Resume file: None
