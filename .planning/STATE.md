@@ -40,6 +40,7 @@ Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 
 | Phase 12 P01 | 2 min | 2 tasks | 1 file |
 | Phase 12-gui P02 | 5 | 2 tasks | 1 files |
 | Phase 13-build-deploy P01 | 2 | 3 tasks | 5 files |
+| Phase 13-build-deploy P02 | 5 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ Recent decisions affecting current work:
 - [Phase 12-gui]: AnalysisFrame heeft geen on_kmb parameter — ePlan Import Tool heeft geen KMB stap (anders dan BOM Import Tool)
 - [Phase 12-gui]: eplan_main.py volgt exact het main.py patroon — tool-naam 'eplan-import-tool', log 'eplan-update-debug.log'
 - [Phase 13-build-deploy]: hiddenimports beperkt tot 5 modules: customtkinter, eplan_gui, eplan_converter, history, app_config
+- [Phase 13-build-deploy]: PyInstaller build geslaagd zonder extra hiddenimports — de 5 modules uit spec waren voldoende
+- [Phase 13-build-deploy]: GitHub release tag eplan-v1.0.0 — prefix eplan- correct voor auto-update filter in app_config
 
 ### Roadmap Evolution
 
