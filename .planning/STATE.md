@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 Phase: 14 of 18 (DB + Infrastructuur)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-03-19 — Roadmap v4.0 aangemaakt (Phases 14-18, 25 requirements gedekt)
+Last activity: 2026-03-19 — Completed 12-01-PLAN.md — ePlan GUI (StartFrame, AnalysisFrame, EplanApp)
 
-Note: v3.0 ePlan Import Tool (Phases 11-13) staat geparkeerd, wordt later opgepakt.
+Note: v3.0 ePlan Import Tool (Phases 11-13) — Phase 12 Plan 01 completed (GUI). Phases 13 (eplan_main.py) pending.
 
 Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 ░░░░░░] [Phase 17 ░░░░░░] [Phase 18 ░░░░░░]
 
@@ -37,6 +37,7 @@ Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 
 
 | Phase 11 P01 | 5 min | 2 tasks | 1 file |
 | Phase 11 P02 | 8 min | 2 tasks | 1 file |
+| Phase 12 P01 | 2 min | 2 tasks | 1 file |
 
 ## Accumulated Context
 
@@ -56,6 +57,7 @@ Recent decisions affecting current work:
 - [Phase 11]: Lokale 26xxx teller: MAX query eenmalig voor de lus, teller verhogen per nieuw artikel
 - [Phase 11-core-converter]: Header-constanten als module-level exports (ARTIKEL_HEADERS etc.) zodat test-scripts en de GUI ze kunnen importeren zonder write_output te moeten aanroepen
 - [Phase 11-core-converter]: Duplicaatcheck opent een tweede connectie na match_components omdat conn al gesloten is in de finally-block van stap 4
+- [Phase 12-gui]: AnalysisFrame heeft geen on_kmb parameter — ePlan Import Tool heeft geen KMB stap (anders dan BOM Import Tool)
 
 ### Roadmap Evolution
 
@@ -76,5 +78,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Completed 11-02-PLAN.md — eplan_converter.py output-generatie, CSV header constanten en stuklijst-duplicaatcheck
+Stopped at: Completed 12-01-PLAN.md — ePlan Import Tool GUI (eplan_gui.py): StartFrame, AnalysisFrame, EplanApp
 Resume file: None

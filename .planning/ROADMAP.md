@@ -134,7 +134,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — eplan_gui.py: StartFrame + AnalysisFrame + EplanApp (twee-staps dry_run flow, history logging)
+- [x] 12-01-PLAN.md — eplan_gui.py: StartFrame + AnalysisFrame + EplanApp (twee-staps dry_run flow, history logging)
 - [ ] 12-02-PLAN.md — eplan_main.py: entry point met versie, update-check thread, visuele checkpoint
 
 ### Phase 13: Build & Deploy
@@ -236,7 +236,7 @@ Plans:
 | 8. HTTPS + Scanner UX | v2.0 | 1/1 | Complete | 2026-03-11 |
 | 9. Gebruiker-identificatie | v2.0 | 0/1 | Not started | - |
 | 11. Core Converter | 2/2 | Complete    | 2026-03-19 | - |
-| 12. GUI | v3.0 | 0/? | Not started | - |
+| 12. GUI | v3.0 | 1/2 | In progress | 12-01 done |
 | 13. Build & Deploy | v3.0 | 0/? | Not started | - |
 | 14. DB + Infrastructuur | v4.0 | 0/? | Not started | - |
 | 15. ETL | v4.0 | 0/? | Not started | - |
