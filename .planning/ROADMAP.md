@@ -6,6 +6,7 @@
 - ✅ **v1.1 Config + Self-update** - Phases 4-6 (shipped 2026-02-26)
 - 🚧 **v2.0 Locatie Scanner — Productie** - Phases 7-9 (in progress)
 - 🚧 **v3.0 ePlan Import Tool** - Phases 11-13 (in progress)
+- 📋 **v4.0 Rapporterings-DB** - Phases 14-18 (planned)
 
 ## Phases
 
@@ -42,6 +43,16 @@
 - [ ] **Phase 11: Core Converter** - Headless engine: parse ePlan Excel, match artikelen, genereer output bestanden
 - [ ] **Phase 12: GUI** - CustomTkinter interface maakt de converter bruikbaar voor Evy
 - [ ] **Phase 13: Build & Deploy** - Standalone exe via PyInstaller, GitHub release pipeline, installatiescripts
+
+### 📋 v4.0 Rapporterings-DB
+
+**Milestone Goal:** Een aparte rapporterings-database (`Spinnekop_Reporting`) gevuld via nachtelijke Python ETL, met drie lagen (raw/core/report) als fundament voor nacalculatie en operationele rapportering. Francis kan per VO zien wat het aan uren en aankoop heeft gekost — zonder in het ERP te moeten duiken.
+
+- [ ] **Phase 14: DB + Infrastructuur** - `Spinnekop_Reporting` aangemaakt met raw/core/report schemas, kalender-tabel en ETL-controle tabel
+- [ ] **Phase 15: ETL** - Nachtelijke Python extract draait via Task Scheduler, append-only naar raw, idempotent en VPN-bestendig
+- [ ] **Phase 16: Core-laag** - Star schema gevuld: drie dimensies (VO, medewerker, artikel) + fact_uren
+- [ ] **Phase 17: Report + Power BI** - Report-views voor nacalculatie live, Power BI pilot rapport voor Horafrost klaar
+- [ ] **Phase 18: Inkoop-keten** - FK inkoopfactuur → VO bevestigd, fact_aankoop gevuld, volledige nacalculatie-view beschikbaar
 
 ## Phase Details
 
@@ -136,9 +147,79 @@ Plans:
 Plans:
 - [ ] 13-01: TBD (run /gsd:plan-phase 13 to break down)
 
+### Phase 14: DB + Infrastructuur
+**Goal**: `Spinnekop_Reporting` bestaat op de SQL Server met de drie schemas, een gevulde kalender-tabel en een werkende ETL-controle tabel — het fundament waarop alle volgende lagen bouwen
+**Depends on**: Nothing (nieuwe database op bestaande instantie)
+**Requirements**: INFRA-01, INFRA-02, INFRA-03, INFRA-04
+**Success Criteria** (what must be TRUE):
+  1. Database `Spinnekop_Reporting` is bereikbaar via pyodbc op `10.0.1.5\RIDDERIQ` en bevat de schemas `raw`, `core` en `report`
+  2. `core.dim_datum` bevat rijen voor 2020 t/m 2030 met week, maand, kwartaal en jaar kolommen — een SELECT op een willekeurige datum geeft de juiste waarden terug
+  3. `raw.etl_log` bestaat en accepteert een INSERT met run_date, tabel, rows_extracted, rows_loaded, status en error_msg
+  4. Alle DDL-scripts kunnen twee keer achter elkaar worden uitgevoerd zonder fouten (idempotent)
+**Plans**: TBD
+
+Plans:
+- [ ] 14-01: TBD (run /gsd:plan-phase 14 to break down)
+
+### Phase 15: ETL
+**Goal**: Een Python-script extracteert nachtelijk de relevante RidderIQ-tabellen naar `raw.*`, logt elke run, is bestand tegen VPN-drops en draait automatisch via Task Scheduler
+**Depends on**: Phase 14
+**Requirements**: ETL-01, ETL-02, ETL-03, ETL-04, ETL-05, ETL-06, ETL-07
+**Success Criteria** (what must be TRUE):
+  1. Na een nachtelijke run bevatten `raw.R_TIMESHEETLINE`, `raw.R_PRODUCTIONORDER`, `raw.R_SALESORDER`, `raw.R_ITEM` en `raw.R_EMPLOYEE` rijen met de `snapshot_date` van gisteren
+  2. Als het script tweemaal op dezelfde dag wordt uitgevoerd, bevat elke raw-tabel precies één set rijen voor die datum (geen duplicaten)
+  3. `raw.etl_log` toont een geslaagde run met correcte rowcounts; bij een VPN-fout staat er een foutmelding in plaats van een lege rij
+  4. `raw.schema_snapshot` bevat kolomnamen van de brondatabases zodat ERP-updates detecteerbaar zijn
+  5. Task Scheduler voert het script uit om 02:00 en slaat de run over als `10.0.1.5` niet pingbaar is
+**Plans**: TBD
+
+Plans:
+- [ ] 15-01: TBD (run /gsd:plan-phase 15 to break down)
+
+### Phase 16: Core-laag
+**Goal**: Het star schema in `core` is gevuld — drie dimensies en `fact_uren` bevatten actuele data na een ETL-run, klaar om door rapportage-views te worden bevraagd
+**Depends on**: Phase 15
+**Requirements**: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05
+**Success Criteria** (what must be TRUE):
+  1. `core.dim_verkooporder`, `core.dim_medewerker` en `core.dim_artikel` bevatten rijen die overeenkomen met de huidige stand in `Spinnekop Live 2`
+  2. `core.fact_uren` bevat één rij per urenregel met FK's naar alle drie dimensies en naar `dim_datum` — een JOIN op een willekeurig VO-nummer geeft de bijbehorende uren terug
+  3. De stored procs kunnen tweemaal achter elkaar worden aangeroepen zonder dubbele rijen of fouten (idempotent via MERGE of TRUNCATE+INSERT)
+**Plans**: TBD
+
+Plans:
+- [ ] 16-01: TBD (run /gsd:plan-phase 16 to break down)
+
+### Phase 17: Report + Power BI
+**Goal**: Report-views zijn bevraagbaar via Power BI Import mode, en het pilot rapport voor Horafrost toont uren per VO met datum- en medewerkersfilter — klaar om te delen met Francis en Carl
+**Depends on**: Phase 16
+**Requirements**: REPORT-01, REPORT-02, REPORT-03, REPORT-04
+**Success Criteria** (what must be TRUE):
+  1. `report.v_uren_per_vo` geeft totaal uren per VO terug, filterbaar op periode en medewerker
+  2. `report.v_nacalculatie_uren` geeft per urenregel het VO-nummer, de datum, de medewerker en het productiebonnummer terug
+  3. Het Power BI `.pbix` rapport opent, verbindt via Import mode met `Spinnekop_Reporting`, en toont uren per VO voor Horafrost na een handmatige refresh
+  4. Het rapport bevat een "data freshness" kaart die de datum van de laatste ETL-run toont zodat stale data direct zichtbaar is
+**Plans**: TBD
+
+Plans:
+- [ ] 17-01: TBD (run /gsd:plan-phase 17 to break down)
+
+### Phase 18: Inkoop-keten
+**Goal**: De FK-keten inkoopfactuur → verkooporder is bevestigd en gedocumenteerd, het ETL is uitgebreid met inkooptabellen, en `fact_aankoop` maakt een volledige nacalculatie (uren + aankoop) per VO mogelijk
+**Depends on**: Phase 17
+**Requirements**: INKOOP-01, INKOOP-02, INKOOP-03, INKOOP-04, INKOOP-05
+**Success Criteria** (what must be TRUE):
+  1. De FK-keten `inkoopfactuur → R_SALESORDER` is gedocumenteerd in `20-analyse/` met tabelnames, kolomnamen en join-paden — verifieerbaar via een SQL-query die inkoopregels koppelt aan een VO-nummer
+  2. `raw.*` bevat dagelijkse snapshots van de inkooptabellen na de nachtelijke ETL
+  3. `core.dim_leverancier` en `core.fact_aankoop` bevatten actuele data na een ETL-run; een JOIN op een VO-nummer geeft zowel uren als aankoopkosten terug
+  4. `report.v_nacalculatie_volledig` geeft per VO de totale uren en totale aankoopkosten naast elkaar — Francis kan op dit rapport besluiten nemen over projectrendabiliteit
+**Plans**: TBD
+
+Plans:
+- [ ] 18-01: TBD (run /gsd:plan-phase 18 to break down)
+
 ## Progress
 
-**Execution Order:** Phase 7 → Phase 8 → Phase 9 | Phase 11 → Phase 12 → Phase 13
+**Execution Order:** Phase 7 → Phase 8 → Phase 9 | Phase 11 → Phase 12 → Phase 13 | Phase 14 → Phase 15 → Phase 16 → Phase 17 → Phase 18
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -154,3 +235,8 @@ Plans:
 | 11. Core Converter | v3.0 | 0/? | Not started | - |
 | 12. GUI | v3.0 | 0/? | Not started | - |
 | 13. Build & Deploy | v3.0 | 0/? | Not started | - |
+| 14. DB + Infrastructuur | v4.0 | 0/? | Not started | - |
+| 15. ETL | v4.0 | 0/? | Not started | - |
+| 16. Core-laag | v4.0 | 0/? | Not started | - |
+| 17. Report + Power BI | v4.0 | 0/? | Not started | - |
+| 18. Inkoop-keten | v4.0 | 0/? | Not started | - |
