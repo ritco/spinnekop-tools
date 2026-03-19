@@ -48,6 +48,23 @@ EPLAN_STUKLIJST_STATUS = 4       # Beschikbaar
 CSV_SEPARATOR = ';'
 CSV_ENCODING = 'utf-8-sig'
 
+# CSV kolomheaders — identiek aan bom_converter.py zodat dezelfde
+# RidderIQ importschema's herbruikt kunnen worden.
+ARTIKEL_HEADERS = [
+    'Artikelcode', 'Omschrijving', 'Omschrijving Engels',
+    'Artikelgroep', 'Artikeleenheid', 'Registratietraject', 'Stocktype',
+]
+HEADER_HEADERS = [
+    'Stuklijstnummer', 'Omschrijving', 'Tekeningnummer',
+    'Datum revisie', 'Stuklijst status', 'Revisie',
+    'Maakdeelvoorkeur', 'Artikelcode',
+]
+REGELS_HEADERS = [
+    'Stuklijstnummer', 'Artikelcode', 'Omschrijving',
+    'Aantal', 'Posnr', 'Lengte', 'Verstek links', 'Verstek rechts',
+    'Rotatie',
+]
+
 
 # =============================================================================
 # DATACLASSES
@@ -471,8 +488,7 @@ def write_output(projectnaam: str, rijen: List[EplanRow],
             ])
         _write_csv(
             output_dir / '01-nieuwe-artikelen-eplan.csv',
-            ['Artikelcode', 'Omschrijving', 'Omschrijving Engels',
-             'Artikelgroep', 'Artikeleenheid', 'Registratietraject', 'Stocktype'],
+            ARTIKEL_HEADERS,
             artikel_rows,
         )
 
@@ -492,9 +508,7 @@ def write_output(projectnaam: str, rijen: List[EplanRow],
     ]]
     _write_csv(
         output_dir / '02-stuklijst-header.csv',
-        ['Stuklijstnummer', 'Omschrijving', 'Tekeningnummer',
-         'Datum revisie', 'Stuklijst status', 'Revisie',
-         'Maakdeelvoorkeur', 'Artikelcode'],
+        HEADER_HEADERS,
         header_rows,
     )
 
@@ -534,9 +548,7 @@ def write_output(projectnaam: str, rijen: List[EplanRow],
 
     _write_csv(
         output_dir / '03-stuklijstregels.csv',
-        ['Stuklijstnummer', 'Artikelcode', 'Omschrijving',
-         'Aantal', 'Posnr', 'Lengte', 'Verstek links', 'Verstek rechts',
-         'Rotatie'],
+        REGELS_HEADERS,
         regel_rows,
     )
 
@@ -586,6 +598,8 @@ def convert(excel_path: str, env: str, dry_run: bool = True) -> ConversionResult
         "Aggregatie: %d unieke componenten, %d overgeslagen",
         len(rijen), len(skipped)
     )
+    if not rijen:
+        result.warnings.append("Excel bevat geen dataregels (rij 7+)")
 
     # Stap 3: SQL verbinding
     try:
@@ -612,7 +626,25 @@ def convert(excel_path: str, env: str, dry_run: bool = True) -> ConversionResult
     finally:
         conn.close()
 
-    # Stap 5: Stuklijst-duplicaatcheck (BOM-01) — wordt in Plan 02 toegevoegd
+    # Stap 5: Stuklijst-duplicaatcheck (BOM-01)
+    try:
+        conn2, _ = get_connection(env)
+        if conn2:
+            cursor = conn2.cursor()
+            cursor.execute(
+                "SELECT COUNT(*) FROM R_ASSEMBLY WHERE CODE = ?",
+                (result.projectnaam,)
+            )
+            count = cursor.fetchone()[0]
+            conn2.close()
+            if count > 0:
+                result.errors.append(
+                    f"Stuklijst '{result.projectnaam}' bestaat al in R_ASSEMBLY. "
+                    f"Verwijder de bestaande stuklijst in RidderIQ of gebruik "
+                    f"een andere projectnaam."
+                )
+    except Exception as e:
+        result.warnings.append(f"Kan stuklijst-duplicaatcheck niet uitvoeren: {e}")
 
     # Stap 6: CSV schrijven
     if not dry_run and not result.has_blockers:
@@ -627,3 +659,40 @@ def convert(excel_path: str, env: str, dry_run: bool = True) -> ConversionResult
         len(result.errors), len(result.warnings)
     )
     return result
+
+
+# =============================================================================
+# MAIN — voor handmatig testen
+# =============================================================================
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO, format='%(message)s')
+    _log = logging.getLogger(__name__)
+
+    excel = sys.argv[1] if len(sys.argv) > 1 else '20-analyse/Inputdocumenten/Stuklijst.xlsx'
+    env = sys.argv[2] if len(sys.argv) > 2 else 'speel'
+
+    _log.info("ePlan Converter — dry run")
+    _log.info(f"  Excel: {excel}")
+    _log.info(f"  Omgeving: {env}")
+
+    result = convert(excel, env, dry_run=True)
+
+    _log.info("")
+    _log.info("Resultaat:")
+    _log.info(f"  Matched:      {len(result.matched)}")
+    _log.info(f"  Nieuw:        {len(result.new_items)}")
+    _log.info(f"  Overgeslagen: {len(result.skipped)}")
+    _log.info(f"  Warnings:     {len(result.warnings)}")
+    _log.info(f"  Fouten:       {len(result.errors)}")
+
+    for w in result.warnings:
+        _log.warning(f"  WAARSCHUWING: {w}")
+    for e in result.errors:
+        _log.error(f"  FOUT: {e}")
+
+    if result.has_blockers:
+        _log.error("GEBLOKKEERD — geen bestanden worden geschreven")
+        sys.exit(1)
+    else:
+        _log.info("OK — dry run geslaagd")
