@@ -40,8 +40,9 @@
 
 **Milestone Goal:** Een tweede import tool naast de BOM Import Tool — leest ePlan stuklijst-exports, koppelt componenten aan bestaande RidderIQ-artikelen of maakt nieuwe aan, en importeert stuklijsten klaar voor gebruik in productiebons.
 
-- [x] **Phase 11: Core Converter** - Headless engine: parse ePlan Excel, match artikelen, genereer output bestanden (completed 2026-03-19)
-- [ ] **Phase 12: GUI** - CustomTkinter interface maakt de converter bruikbaar voor Evy
+- [x] **Phase 11: Core Converter** - Headless engine: parse ePlan Excel, match artikelen, genereer output bestanden
+ (completed 2026-03-19)
+- [ ] **Phase 12: GUI** - CustomTkinter interface maakt de converter bruikbaar voor Florian/Toby
 - [ ] **Phase 13: Build & Deploy** - Standalone exe via PyInstaller, GitHub release pipeline, installatiescripts
 
 ### 📋 v4.0 Rapporterings-DB
@@ -121,19 +122,20 @@ Plans:
 - [ ] 11-02-PLAN.md — Output-generatie: drie CSV-bestanden + end-to-end integratietest (BOM)
 
 ### Phase 12: GUI
-**Goal**: Evy kan de ePlan Import Tool openen, een bestand kiezen, de analyse bekijken, en de outputbestanden genereren — zonder commandoregel of technische kennis
+**Goal**: Florian/Toby kan de ePlan Import Tool openen, een bestand kiezen, de analyse bekijken, en de outputbestanden genereren — zonder commandoregel of technische kennis
 **Depends on**: Phase 11
 **Requirements**: GUI-01, GUI-02, GUI-03, GUI-04, HIST-01, HIST-02
 **Success Criteria** (what must be TRUE):
-  1. Evy opent de tool, klikt "Bestand kiezen", selecteert een ePlan Excel en ziet direct een validatiesamenvatting met aantallen gevonden artikelen, nieuwe artikelen, overgeslagen rijen en eventuele fouten
-  2. Evy kiest Speeltuin of Live omgeving via een duidelijke selector voordat ze importeert
-  3. Bij blokkerende fouten is de "Genereer output" knop uitgeschakeld — Evy kan pas verder als alle fouten opgelost zijn
+  1. Florian/Toby opent de tool, klikt "Bestand kiezen", selecteert een ePlan Excel en ziet direct een validatiesamenvatting met aantallen gevonden artikelen, nieuwe artikelen, overgeslagen rijen en eventuele fouten
+  2. Florian/Toby kiest Speeltuin of Live omgeving via een duidelijke selector voordat ze importeert
+  3. Bij blokkerende fouten is de "Genereer output" knop uitgeschakeld — Florian/Toby kan pas verder als alle fouten opgelost zijn
   4. Na goedkeuring toont de tool stapsgewijze importinstructies en bevestigt welke bestanden zijn aangemaakt
   5. Recente imports zijn zichtbaar in de StartFrame na een succesvolle import
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 12-01: TBD (run /gsd:plan-phase 12 to break down)
+- [ ] 12-01-PLAN.md — eplan_gui.py: StartFrame + AnalysisFrame + EplanApp (twee-staps dry_run flow, history logging)
+- [ ] 12-02-PLAN.md — eplan_main.py: entry point met versie, update-check thread, visuele checkpoint
 
 ### Phase 13: Build & Deploy
 **Goal**: eplan-import-tool.exe is beschikbaar als standalone executable, volgt de GitHub release pipeline en kan worden geinstalleerd via scripts
