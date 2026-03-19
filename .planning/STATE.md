@@ -35,6 +35,8 @@ Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 
 **Recent Trend:**
 - Stable (complexity-adjusted)
 
+| Phase 11 P01 | 5 min | 2 tasks | 1 file |
+
 ## Accumulated Context
 
 ### Decisions
@@ -49,6 +51,8 @@ Recent decisions affecting current work:
 - [v4.0]: fact_aankoop uitgesteld naar Phase 18 — inkoop FK-keten eerst bevestigen
 - [v3.0]: ePlan tool volgt exact hetzelfde CTk patroon als gui.py
 - [v3.0]: Output: 3 bestanden (01-nieuwe-artikelen-eplan.csv, 02-stuklijst-header.csv, 03-stuklijstregels.sql)
+- [Phase 11]: Import-fallback voor app_config: try direct, except sys.path.insert scripts/
+- [Phase 11]: Lokale 26xxx teller: MAX query eenmalig voor de lus, teller verhogen per nieuw artikel
 
 ### Roadmap Evolution
 
@@ -69,5 +73,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Roadmap v4.0 geschreven (Phases 14-18), STATE.md bijgewerkt, REQUIREMENTS.md traceability aangevuld
+Stopped at: Completed 11-01-PLAN.md — eplan_converter.py datamodel, parser en SQL-matching
 Resume file: None
