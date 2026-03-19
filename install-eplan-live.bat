@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set "URL=https://raw.githubusercontent.com/ritco/spinnekop-tools/main/install-eplan-live.ps1"
+set "URL=https://raw.githubusercontent.com/ritco/spinnekop-tools/main/installers/install-eplan-live.ps1"
 set "TMPFILE=%TEMP%\install-eplan-live.ps1"
 
 echo ePlan Import Tool - Installatie (LIVE)

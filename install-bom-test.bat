@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set "URL=https://raw.githubusercontent.com/ritco/spinnekop-tools/main/install-bom-test.ps1"
+set "URL=https://raw.githubusercontent.com/ritco/spinnekop-tools/main/installers/install-bom-test.ps1"
 set "TMPFILE=%TEMP%\install-bom-test.ps1"
 
 echo BOM Import Tool - Installatie (TEST)
