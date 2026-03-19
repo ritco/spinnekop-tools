@@ -114,10 +114,11 @@ Plans:
   3. Artikelen die niet bestaan in RidderIQ verschijnen in `01-nieuwe-artikelen-eplan.csv` met correct 26xxx code, artikelgroep PK 673, REGISTRATIONPATH=5 en INVENTORYKIND=4
   4. De converter schrijft `02-stuklijst-header.csv` met projectnaam als stuklijstcode en `03-stuklijstregels.sql` met INSERT statements voor alle geaggregeerde regels
   5. Als de stuklijstcode al bestaat in R_ASSEMBLY, stopt de converter met een blokkerende fout voordat er bestanden worden geschreven
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 11-01: TBD (run /gsd:plan-phase 11 to break down)
+- [ ] 11-01-PLAN.md — Datamodel, Excel-parser en SQL-matchinglogica (PARSE + MATCH + ART)
+- [ ] 11-02-PLAN.md — Output-generatie: drie CSV-bestanden + end-to-end integratietest (BOM)
 
 ### Phase 12: GUI
 **Goal**: Evy kan de ePlan Import Tool openen, een bestand kiezen, de analyse bekijken, en de outputbestanden genereren — zonder commandoregel of technische kennis
