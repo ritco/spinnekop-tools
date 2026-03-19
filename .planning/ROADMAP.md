@@ -233,7 +233,7 @@ Plans:
 | 7. Server Deployment | v2.0 | 1/1 | Complete | 2026-03-09 |
 | 8. HTTPS + Scanner UX | v2.0 | 1/1 | Complete | 2026-03-11 |
 | 9. Gebruiker-identificatie | v2.0 | 0/1 | Not started | - |
-| 11. Core Converter | 2/2 | Complete   | 2026-03-19 | - |
+| 11. Core Converter | 2/2 | Complete    | 2026-03-19 | - |
 | 12. GUI | v3.0 | 0/? | Not started | - |
 | 13. Build & Deploy | v3.0 | 0/? | Not started | - |
 | 14. DB + Infrastructuur | v4.0 | 0/? | Not started | - |
