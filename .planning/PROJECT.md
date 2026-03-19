@@ -8,7 +8,28 @@ Release management voor de `bom-import-tool.exe` en `productiestructuur.exe`, tw
 
 Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in de ontwikkeling zit.
 
-## Current Milestone: v3.0 ePlan Import Tool
+## Current Milestone: v4.0 Rapporterings-DB
+
+**Goal:** Een aparte rapporterings-database bouwen op dezelfde SQL Server, gevuld via nachtelijke Python ETL, met drie lagen (raw/core/report) als fundament voor nacalculatie en operationele rapportering.
+
+**Context (2026-03-19):**
+- Bron: `Spinnekop Live 2` op `10.0.1.5\RIDDERIQ` (SQL Server 2016, bereikbaar via VPN + pyodbc)
+- Nieuwe database: `Spinnekop_Reporting` op dezelfde instantie — productie-DB volledig ontzien
+- Drie schemas: `raw` (nachtelijke snapshot + append), `core` (feiten/dimensies), `report` (views voor Power BI)
+- Uren-keten bevestigd: `R_TIMESHEETLINE → R_PRODUCTIONORDER → R_SALESORDER`
+- Aankoop via inkoopfacturen (link TBD bij volgende VPN-sessie)
+- Power BI Desktop gratis als start; Pro-licentie afhankelijk van M365-plan (checken bij Lebon IT)
+- ETL: Python script via Windows Task Scheduler, nachtelijk (append per dag met `snapshot_date`)
+
+**Target features:**
+- Rapporterings-database aanmaken met raw/core/report schemas
+- Nachtelijke ETL: relevante RidderIQ-tabellen kopiëren naar raw
+- Core-laag: feiten (uren, aankoop) + dimensies (VO, medewerker, artikel, datum)
+- Report-laag: views voor nacalculatie en operationele KPI's
+- Power BI rapport voor pilot Horafrost (uren per VO)
+- FK-verkenning inkoopfacturen → VO (voor aankoop in core-laag)
+
+## Previous Milestone: v3.0 ePlan Import Tool
 
 **Goal:** Een tweede import tool bouwen naast de BOM Import Tool — leest ePlan stuklijst-exports (Excel), koppelt componenten aan bestaande RidderIQ-artikelen of maakt nieuwe aan, en importeert stuklijsten + regels klaar voor gebruik in productiebons.
 
@@ -25,6 +46,12 @@ Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in d
 - Stuklijst header + regels genereren en importeren
 - CustomTkinter GUI (zelfde patroon als gui.py)
 - Build + deploy via GitHub releases, tag prefix `eplan-`
+
+## Previous Milestone: v3.0 ePlan Import Tool
+
+**Goal:** Een tweede import tool bouwen naast de BOM Import Tool — leest ePlan stuklijst-exports (Excel), koppelt componenten aan bestaande RidderIQ-artikelen of maakt nieuwe aan, en importeert stuklijsten + regels klaar voor gebruik in productiebons.
+
+**Status:** Phases 11-13 gepland (2026-03-18), nog niet uitgevoerd.
 
 ## Previous Milestone: v2.0 Locatie Scanner — Productie
 

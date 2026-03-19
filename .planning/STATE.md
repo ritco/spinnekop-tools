@@ -5,14 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in de ontwikkeling zit.
-**Current focus:** v3.0 ePlan Import Tool — Phase 11 (Core Converter)
+**Current focus:** v4.0 Rapporterings-DB — Milestone gestart
 
 ## Current Position
 
-Phase: 11 — Core Converter
-Plan: Not started
-Status: Roadmap defined, ready to plan Phase 11
-Last activity: 2026-03-18 — Roadmap v3.0 aangemaakt (Phases 11-13)
+Phase: Not started (defining requirements for v4.0)
+Plan: —
+Status: Research loopt — requirements en roadmap volgen
+Last activity: 2026-03-19 — Milestone v4.0 Rapporterings-DB gestart
+
+Note: v3.0 ePlan Import Tool (Phases 11-13) staat geparkeerd, wordt later opgepakt.
 
 Progress: [Phase 11 ░░░░░░] [Phase 12 ░░░░░░] [Phase 13 ░░░░░░]
 
