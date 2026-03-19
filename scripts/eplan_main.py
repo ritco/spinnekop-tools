@@ -7,7 +7,7 @@ Gebruik:
   GUI:  python eplan_main.py
 """
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 import sys
 from pathlib import Path
