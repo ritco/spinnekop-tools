@@ -59,8 +59,11 @@ Headless Python module `eplan_converter.py` — leest ePlan Excel export, matcht
 <specifics>
 ## Specific Ideas
 
-- Volledig consistent met bestaande `bom_converter.py` — gebruik die als referentie voor CSV-kolomvolgorde, R_ITEM veldnamen, artikelgroep-PKs
-- Stuklijstregels CSV volgt het bestaande `03-stuklijstregels.csv` formaat uit de BOM tool (R_ASSEMBLYDETAILITEM)
+- **Identiek CSV formaat als BOM Import Tool** — exact dezelfde kolomheaders, volgorde en encoding. Eén RidderIQ importworkflow voor beide tools, geen aparte importschema's nodig.
+  - `01-nieuwe-artikelen-eplan.csv` → zelfde kolommen als bestaande R_ITEM import CSV uit bom_converter.py
+  - `02-stuklijst-header.csv` → zelfde kolommen als `02-stuklijst-headers.csv` uit BOM tool
+  - `03-stuklijstregels.csv` → zelfde kolommen als `03-stuklijstregels.csv` uit BOM tool
+- Gebruik `bom_converter.py` als directe referentie voor alle CSV-structuren — niet nabootsen maar exact overnemen
 - Referentiebestand voor de Excel structuur: `20-analyse/Inputdocumenten/Stuklijst.xlsx`
 
 </specifics>
