@@ -7,14 +7,24 @@ Desktop tools voor Spinnekop BV — BOM import, productiestructuur en verdere au
 | Tool | Beschrijving | Laatste versie |
 |------|-------------|----------------|
 | `bom-import-tool.exe` | SolidWorks BOM exporteren naar RidderIQ ERP | zie Releases |
+| `eplan-import-tool.exe` | ePlan materiaalslijst importeren naar RidderIQ | zie Releases |
 | `productiestructuur.exe` | Productiestructuur beheer | zie Releases |
 
 ## Installatie (eenmalig)
 
-1. Ga naar [Releases](https://github.com/ritco/spinnekop-tools/releases)
-2. Download de gewenste `.exe`
-3. Zet het bestand op de gewenste locatie (bv. `C:\Tools\Spinnekop\`)
-4. Dubbelklik om te starten — de tool configureert zichzelf bij de eerste keer
+Voer het installatiescript uit voor de gewenste tool — het script downloadt automatisch de nieuwste versie van GitHub en maakt een snelkoppeling op het bureaublad.
+
+| Script | Tool | Kanaal |
+|--------|------|--------|
+| `install-bom-live.bat` | BOM Import Tool | Stabiel (productie) |
+| `install-bom-test.bat` | BOM Import Tool | Test (pre-release) |
+| `install-eplan-live.bat` | ePlan Import Tool | Stabiel (productie) |
+| `install-eplan-test.bat` | ePlan Import Tool | Test (pre-release) |
+
+**Stappen:**
+1. Download dit script naar een lokale map (bv. `C:\Temp\`)
+2. Dubbelklik op het `.bat` bestand
+3. Volg de instructies op het scherm (installatiemap + SQL wachtwoord)
 
 > **Let op**: kopieer ook `config.json` van een andere werkplek of vraag de consultant.
 
@@ -97,6 +107,8 @@ gh release create bom-v1.2.3-test \
 |---------|------|----------|--------|
 | `bom-v1.2.3` | BOM Import Tool | `bom-import-tool.exe` | Stabiel (live) |
 | `bom-v1.2.3-test` | BOM Import Tool | `bom-import-tool.exe` | Prerelease (test) |
+| `eplan-v1.0.0` | ePlan Import Tool | `eplan-import-tool.exe` | Stabiel (live) |
+| `eplan-v1.0.0-test` | ePlan Import Tool | `eplan-import-tool.exe` | Prerelease (test) |
 | `productiestructuur-v1.0.2` | Productiestructuur | `productiestructuur.exe` | Stabiel (live) |
 | `productiestructuur-v1.0.2-test` | Productiestructuur | `productiestructuur.exe` | Prerelease (test) |
 
