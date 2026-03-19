@@ -1,103 +1,123 @@
-# Requirements: ePlan Import Tool (v3.0)
+# Requirements: Rapporterings-DB (v4.0)
 
-**Defined:** 2026-03-18
-**Core Value:** Evy kan altijd een werkende versie van de tool gebruiken, ongeacht waar Rik in de ontwikkeling zit.
+**Defined:** 2026-03-19
+**Core Value:** Francis kan per project (VO) zien wat het aan uren en aankoop heeft gekost — zonder in het ERP te moeten duiken.
 
-## v1 Requirements
+## v1 Requirements — Fase 1: ETL Fundament + Uren Pilot
 
-### Invoer & Parsing
+### Infrastructuur
 
-- [ ] **PARSE-01**: Tool leest ePlan Excel exportbestand in het vaste formaat (projectnaam rij 4, headers rij 6: Naam in schema / Fabrikant / Bestelnummer / Hoeveelheid, data vanaf rij 7)
-- [ ] **PARSE-02**: Tool aggregeert hoeveelheden van identieke Bestelnummers (zelfde component meerdere keren in schema → opgetelde qty in één stuklijstregel)
-- [ ] **PARSE-03**: Rijen zonder Bestelnummer of Fabrikant worden overgeslagen met een waarschuwing (niet blokkerend)
+- [ ] **INFRA-01**: Nieuwe database `Spinnekop_Reporting` aangemaakt op `10.0.1.5\RIDDERIQ` met drie schemas: `raw`, `core`, `report`
+- [ ] **INFRA-02**: Alle DDL-scripts zijn idempotent (herhaalbaar zonder fouten op bestaande DB)
+- [ ] **INFRA-03**: `dim_datum` kalender-tabel aanwezig in `core` (2020–2030, met week/maand/kwartaal/jaar kolommen)
+- [ ] **INFRA-04**: ETL-controle tabel `raw.etl_log` aanwezig (run_date, tabel, rows_extracted, rows_loaded, status, error_msg)
 
-### Matching
+### ETL — Extract
 
-- [ ] **MATCH-01**: Voor elk Bestelnummer (format `Fabrikant.Onderdeel`) haalt de tool het Onderdeel-deel op en zoekt dit op in `R_ITEM.OMSCHRIJVING` via `LIKE '%Onderdeel%'`
-- [ ] **MATCH-02**: Bij exact 1 match gebruikt de tool de bestaande RidderIQ artikelcode
-- [ ] **MATCH-03**: Bij 0 matches maakt de tool een nieuw artikel aan (zie ART-01)
-- [ ] **MATCH-04**: Bij meer dan 1 match toont de tool een blokkerende fout met de conflicterende artikelen
+- [ ] **ETL-01**: Python extract-script kopieert nachtelijk `R_TIMESHEETLINE`, `R_PRODUCTIONORDER`, `R_SALESORDER`, `R_ITEM`, `R_EMPLOYEE` (of equivalent) naar `raw.*` tabellen
+- [ ] **ETL-02**: Elke raw-tabel krijgt een `snapshot_date` kolom (datum van de run); rijen worden toegevoegd, nooit overschreven (append-only)
+- [ ] **ETL-03**: Extract is idempotent: `DELETE WHERE snapshot_date = vandaag` vóór elke insert — geen dubbele rijen bij herstart
+- [ ] **ETL-04**: `pyodbc.pooling = False` en expliciete connection timeout (5s) zodat VPN-drops geen hanging connections achterlaten
+- [ ] **ETL-05**: Script logt elke run naar `raw.etl_log` met rowcounts en status (success/error)
+- [ ] **ETL-06**: Script draait via Windows Task Scheduler (nachtelijk 02:00), met pingcheck op `10.0.1.5` vóór connectie
 
-### Artikelen
+### ETL — Schema monitoring
 
-- [ ] **ART-01**: Nieuwe artikelen krijgen een automatisch gegenereerde 26xxx code (`MAX(CODE) WHERE CODE LIKE '26%'` + 1), omschrijving = Bestelnummer, artikelgroep PK 673 (groep 26), eenheid stuks (FK 5), `REGISTRATIONPATH=5`, `INVENTORYKIND=4`
-- [ ] **ART-02**: Nieuwe artikelen worden gegenereerd als CSV (`01-nieuwe-artikelen-eplan.csv`) voor R_ITEM import via RidderIQ importmodule
+- [ ] **ETL-07**: Script snapshort nachtelijk `INFORMATION_SCHEMA.COLUMNS` van de brondbases naar `raw.schema_snapshot` — vroege waarschuwing bij ERP-updates die kolomnamen wijzigen
 
-### Stuklijst
+### Core-laag — Dimensies
 
-- [ ] **BOM-01**: Tool genereert stuklijstkop CSV (`02-stuklijst-header.csv`) voor R_ASSEMBLY import, met projectnaam uit ePlan Excel als stuklijstcode
-- [ ] **BOM-02**: Tool genereert SQL script (`03-stuklijstregels.sql`) voor R_ASSEMBLYDETAILITEM INSERT met geaggregeerde hoeveelheden per component
-- [ ] **BOM-03**: Als stuklijst met dezelfde code al bestaat in R_ASSEMBLY, toont de tool een blokkerende fout vóór import
+- [ ] **CORE-01**: `core.dim_verkooporder` aangemaakt en gevuld via stored proc (PK, VO-nummer, klant, datum, status)
+- [ ] **CORE-02**: `core.dim_medewerker` aangemaakt en gevuld via stored proc (PK, naam, afdeling)
+- [ ] **CORE-03**: `core.dim_artikel` aangemaakt en gevuld via stored proc (PK, code, omschrijving, artikelgroep)
 
-### GUI
+### Core-laag — Feiten
 
-- [ ] **GUI-01**: Gebruiker kan ePlan Excel bestand selecteren via bestandsdialoog (StartFrame, zelfde patroon als gui.py)
-- [ ] **GUI-02**: Gebruiker kiest importomgeving: Speeltuin of Live (via `app_config.py`)
-- [ ] **GUI-03**: Validatieresultaten worden getoond per categorie: gevonden artikelen, nieuwe artikelen, overgeslagen rijen, blokkerende fouten (AnalysisFrame)
-- [ ] **GUI-04**: Na goedkeuring genereert de tool outputbestanden (CSV + SQL) en toont stapsgewijze importinstructies
+- [ ] **CORE-04**: `core.fact_uren` aangemaakt en gevuld via stored proc — grain: één rij per urenregel (medewerker × productiebon × dag × VO), FK's naar alle dims
+- [ ] **CORE-05**: Stored procs zijn idempotent (MERGE of TRUNCATE+INSERT patroon)
 
-### History & Logging
+### Report-laag + Power BI
 
-- [ ] **HIST-01**: Elke import wordt gelogd via `history.py` (datum, bestand, omgeving, status, aantallen gevonden/nieuw/overgeslagen/fouten)
-- [ ] **HIST-02**: Recente imports zijn zichtbaar in de StartFrame (zelfde patroon als BOM Import Tool)
+- [ ] **REPORT-01**: `report.v_uren_per_vo` view: totaal uren per VO, per medewerker, per periode
+- [ ] **REPORT-02**: `report.v_nacalculatie_uren` view: uren per VO met datum, medewerker, productiebonnummer
+- [ ] **REPORT-03**: Power BI Desktop .pbix rapport gebouwd voor pilot Horafrost: uren per VO, filter op periode en medewerker
+- [ ] **REPORT-04**: Power BI connectie via Import mode (niet DirectQuery) — rapport refresht manueel via .pbix op laptop
 
-### Build & Deploy
+## v2 Requirements — Fase 2: Inkoop-keten
 
-- [ ] **BUILD-01**: Tool gebouwd als standalone exe via PyInstaller (`eplan-import-tool.exe`), entry point `scripts/eplan_main.py`
-- [ ] **BUILD-02**: Tool volgt GitHub release pipeline: tag prefix `eplan-`, self-update via `app_config.check_for_update()`
-- [ ] **BUILD-03**: Installatiescripts `install-live.ps1` en `install-test.ps1` in `scripts/deploy/eplan/`
+### Exploratie (voorwaarde voor rest van Fase 2)
 
-## v2 Requirements
+- [ ] **INKOOP-01**: SQL-exploratie uitgevoerd: FK-keten `inkoopfactuur → R_SALESORDER` bevestigd (tabelnames, kolomnamen, join-paden gedocumenteerd in `20-analyse/`)
 
-### Artikelverrijking
+### Raw uitbreiding
 
-- **ART-V2-01**: Leverancier koppelen aan nieuw artikel (R_ITEMSUPPLIER) op basis van Fabrikant-code
-- **ART-V2-02**: Inkoopprijs instellen op nieuw artikel (STANDARDPURCHASEPRICE)
+- [ ] **INKOOP-02**: `R_PURCHASEORDER`, `R_PURCHASEORDERLINE`, `R_PURCHASEINVOICE` (of equivalent) toegevoegd aan nachtelijke ETL en `raw.*`
 
-### Stuklijst uitbreidingen
+### Core uitbreiding
 
-- **BOM-V2-01**: Bestaande stuklijst bijwerken (regels toevoegen/aanpassen) i.p.v. blokkeren
+- [ ] **INKOOP-03**: `core.dim_leverancier` aangemaakt en gevuld
+- [ ] **INKOOP-04**: `core.fact_aankoop` aangemaakt en gevuld — grain: één rij per inkoopfactuur-regel, FK naar dim_verkooporder en dim_leverancier
+
+### Report uitbreiding
+
+- [ ] **INKOOP-05**: `report.v_nacalculatie_volledig` view: uren + aankoop gecombineerd per VO
+
+## Uitgesteld
+
+### Werkelijk vs. Begroot
+
+- **BEGROTING-01**: Begrote uren/kosten per VO opzoeken in RidderIQ en vergelijken met werkelijk
+- **BEGROTING-02**: Variantie-rapport (werkelijk − begroot) per VO in Power BI
+
+*Reden uitstel: begroting-tabellen in RidderIQ nog onbevestigd; 3-6 maanden stabiele data nodig voor zinvolle vergelijking*
 
 ## Out of Scope
 
-| Feature | Reason |
-|---------|--------|
-| Sub-assemblies in stuklijst | ePlan geeft platte lijst, geen hiërarchie |
-| Bewerkingen (R_ASSEMBLYMISCWORKSTEP) | Elektro-componenten hebben geen bewerkingen |
-| Leveranciers automatisch koppelen | Fabrikant-code → R_RELATION mapping ontbreekt nog (v2) |
-| Automatisch afboeken (REGISTRATIONPATH=8) | Handmatig afboeken is huidige werkwijze voor elektro |
+| Feature | Reden |
+|---------|-------|
+| Real-time data (DirectQuery) | VPN onbetrouwbaar, productie-DB ontzien |
+| Power BI Service / cloud publish | Gateway vereist, M365-licentie onbekend — pilot eerst |
+| Volledige DWH (SCDs, lineage) | Overkill voor dit schaal |
+| SSIS / Azure Data Factory | Verkeerde toolset voor on-premises + kleine schaal |
+| Forecasting / trend-analyse | Geen reporting-cultuur aanwezig — eerst fundament |
+| Overhead-allocatie | Te complex voor v1, ETO-context maakt dit lastig |
 
 ## Traceability
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| PARSE-01 | Phase 11 | Pending |
-| PARSE-02 | Phase 11 | Pending |
-| PARSE-03 | Phase 11 | Pending |
-| MATCH-01 | Phase 11 | Pending |
-| MATCH-02 | Phase 11 | Pending |
-| MATCH-03 | Phase 11 | Pending |
-| MATCH-04 | Phase 11 | Pending |
-| ART-01 | Phase 11 | Pending |
-| ART-02 | Phase 11 | Pending |
-| BOM-01 | Phase 11 | Pending |
-| BOM-02 | Phase 11 | Pending |
-| BOM-03 | Phase 11 | Pending |
-| GUI-01 | Phase 12 | Pending |
-| GUI-02 | Phase 12 | Pending |
-| GUI-03 | Phase 12 | Pending |
-| GUI-04 | Phase 12 | Pending |
-| HIST-01 | Phase 12 | Pending |
-| HIST-02 | Phase 12 | Pending |
-| BUILD-01 | Phase 13 | Pending |
-| BUILD-02 | Phase 13 | Pending |
-| BUILD-03 | Phase 13 | Pending |
+| Requirement | Fase | Status |
+|-------------|------|--------|
+| INFRA-01 | Fase 1 (Phase 14) | Pending |
+| INFRA-02 | Fase 1 (Phase 14) | Pending |
+| INFRA-03 | Fase 1 (Phase 14) | Pending |
+| INFRA-04 | Fase 1 (Phase 14) | Pending |
+| ETL-01 | Fase 1 (Phase 15) | Pending |
+| ETL-02 | Fase 1 (Phase 15) | Pending |
+| ETL-03 | Fase 1 (Phase 15) | Pending |
+| ETL-04 | Fase 1 (Phase 15) | Pending |
+| ETL-05 | Fase 1 (Phase 15) | Pending |
+| ETL-06 | Fase 1 (Phase 15) | Pending |
+| ETL-07 | Fase 1 (Phase 15) | Pending |
+| CORE-01 | Fase 1 (Phase 16) | Pending |
+| CORE-02 | Fase 1 (Phase 16) | Pending |
+| CORE-03 | Fase 1 (Phase 16) | Pending |
+| CORE-04 | Fase 1 (Phase 16) | Pending |
+| CORE-05 | Fase 1 (Phase 16) | Pending |
+| REPORT-01 | Fase 1 (Phase 17) | Pending |
+| REPORT-02 | Fase 1 (Phase 17) | Pending |
+| REPORT-03 | Fase 1 (Phase 17) | Pending |
+| REPORT-04 | Fase 1 (Phase 17) | Pending |
+| INKOOP-01 | Fase 2 (Phase 18) | Pending |
+| INKOOP-02 | Fase 2 (Phase 18) | Pending |
+| INKOOP-03 | Fase 2 (Phase 18) | Pending |
+| INKOOP-04 | Fase 2 (Phase 18) | Pending |
+| INKOOP-05 | Fase 2 (Phase 18) | Pending |
 
 **Coverage:**
-- v1 requirements: 21 total
-- Mapped to phases: 21
-- Unmapped: 0
+- v1 requirements (Fase 1): 20 total
+- v2 requirements (Fase 2): 5 total
+- Mapped to phases: 25
+- Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 — traceability filled after roadmap creation*
+*Requirements defined: 2026-03-19*
+*Last updated: 2026-03-19 after initial definition v4.0*
