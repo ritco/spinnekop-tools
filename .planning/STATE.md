@@ -39,6 +39,7 @@ Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 
 | Phase 11 P02 | 8 min | 2 tasks | 1 file |
 | Phase 12 P01 | 2 min | 2 tasks | 1 file |
 | Phase 12-gui P02 | 5 | 2 tasks | 1 files |
+| Phase 13-build-deploy P01 | 2 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -60,6 +61,7 @@ Recent decisions affecting current work:
 - [Phase 11-core-converter]: Duplicaatcheck opent een tweede connectie na match_components omdat conn al gesloten is in de finally-block van stap 4
 - [Phase 12-gui]: AnalysisFrame heeft geen on_kmb parameter — ePlan Import Tool heeft geen KMB stap (anders dan BOM Import Tool)
 - [Phase 12-gui]: eplan_main.py volgt exact het main.py patroon — tool-naam 'eplan-import-tool', log 'eplan-update-debug.log'
+- [Phase 13-build-deploy]: hiddenimports beperkt tot 5 modules: customtkinter, eplan_gui, eplan_converter, history, app_config
 
 ### Roadmap Evolution
 

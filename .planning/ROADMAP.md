@@ -238,7 +238,7 @@ Plans:
 | 9. Gebruiker-identificatie | v2.0 | 0/1 | Not started | - |
 | 11. Core Converter | v3.0 | 2/2 | Complete | 2026-03-19 |
 | 12. GUI | v3.0 | 2/2 | Complete | 2026-03-19 |
-| 13. Build & Deploy | v3.0 | 0/2 | Not started | - |
+| 13. Build & Deploy | 1/2 | In Progress|  | - |
 | 14. DB + Infrastructuur | v4.0 | 0/? | Not started | - |
 | 15. ETL | v4.0 | 0/? | Not started | - |
 | 16. Core-laag | v4.0 | 0/? | Not started | - |
