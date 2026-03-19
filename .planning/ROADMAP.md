@@ -42,7 +42,7 @@
 
 - [x] **Phase 11: Core Converter** - Headless engine: parse ePlan Excel, match artikelen, genereer output bestanden
  (completed 2026-03-19)
-- [x] **Phase 12: GUI** - CustomTkinter interface maakt de converter bruikbaar voor Florian/Toby (completed 2026-03-19)
+- [x] **Phase 12: GUI** - CustomTkinter interface maakt de converter bruikbaar voor Florian/Toby (completed 2026-03-19)
 - [ ] **Phase 13: Build & Deploy** - Standalone exe via PyInstaller, GitHub release pipeline, installatiescripts
 
 ### 📋 v4.0 Rapporterings-DB
@@ -145,10 +145,11 @@ Plans:
   1. `eplan-import-tool.exe` start op een machine zonder Python installatie en toont de GUI zonder foutmeldingen
   2. Bij een nieuwe release controleert de tool bij opstart of er een update beschikbaar is en biedt aan te updaten via dezelfde CTk dialog als de BOM Import Tool
   3. `install-live.ps1` en `install-test.ps1` installeren de exe op de correcte serverlocatie met een ping-check voordat ze kopiëren
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 13-01: TBD (run /gsd:plan-phase 13 to break down)
+- [ ] 13-01-PLAN.md — PyInstaller spec + install scripts + workflow doc update (BUILD-02, BUILD-03)
+- [ ] 13-02-PLAN.md — Build exe + GitHub release eplan-v1.0.0 + checkpoint GUI verificatie (BUILD-01, BUILD-02)
 
 ### Phase 14: DB + Infrastructuur
 **Goal**: `Spinnekop_Reporting` bestaat op de SQL Server met de drie schemas, een gevulde kalender-tabel en een werkende ETL-controle tabel — het fundament waarop alle volgende lagen bouwen
@@ -235,9 +236,9 @@ Plans:
 | 7. Server Deployment | v2.0 | 1/1 | Complete | 2026-03-09 |
 | 8. HTTPS + Scanner UX | v2.0 | 1/1 | Complete | 2026-03-11 |
 | 9. Gebruiker-identificatie | v2.0 | 0/1 | Not started | - |
-| 11. Core Converter | 2/2 | Complete    | 2026-03-19 | - |
-| 12. GUI | v3.0 | Complete    | 2026-03-19 | 2026-03-19 |
-| 13. Build & Deploy | v3.0 | 0/? | Not started | - |
+| 11. Core Converter | v3.0 | 2/2 | Complete | 2026-03-19 |
+| 12. GUI | v3.0 | 2/2 | Complete | 2026-03-19 |
+| 13. Build & Deploy | v3.0 | 0/2 | Not started | - |
 | 14. DB + Infrastructuur | v4.0 | 0/? | Not started | - |
 | 15. ETL | v4.0 | 0/? | Not started | - |
 | 16. Core-laag | v4.0 | 0/? | Not started | - |
