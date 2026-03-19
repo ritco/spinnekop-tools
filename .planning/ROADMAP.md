@@ -5,7 +5,7 @@
 - ✅ **v1.0 Release Management** - Phases 1-3 (shipped 2026-02-24)
 - ✅ **v1.1 Config + Self-update** - Phases 4-6 (shipped 2026-02-26)
 - 🚧 **v2.0 Locatie Scanner — Productie** - Phases 7-9 (in progress)
-- 🚧 **v3.0 ePlan Import Tool** - Phases 11-13 (in progress)
+- ✅ **v3.0 ePlan Import Tool** - Phases 11-13 (shipped 2026-03-19)
 - 📋 **v4.0 Rapporterings-DB** - Phases 14-18 (planned)
 
 ## Phases
@@ -36,7 +36,7 @@
 - [ ] **Phase 8: HTTPS + Scanner UX** - Camera werkt op telefoons zonder Chrome flags
 - [ ] **Phase 9: Gebruiker-identificatie** - Audit trail van wie welke locatie scande
 
-### 🚧 v3.0 ePlan Import Tool
+### ✅ v3.0 ePlan Import Tool — SHIPPED 2026-03-19
 
 **Milestone Goal:** Een tweede import tool naast de BOM Import Tool — leest ePlan stuklijst-exports, koppelt componenten aan bestaande RidderIQ-artikelen of maakt nieuwe aan, en importeert stuklijsten klaar voor gebruik in productiebons.
 
@@ -137,10 +137,11 @@ Plans:
 - [x] 12-01-PLAN.md — eplan_gui.py: StartFrame + AnalysisFrame + EplanApp (twee-staps dry_run flow, history logging)
 - [x] 12-02-PLAN.md — eplan_main.py: entry point met versie, update-check thread, visuele checkpoint ✅
 
-### Phase 13: Build & Deploy
+### Phase 13: Build & Deploy ✅
 **Goal**: eplan-import-tool.exe is beschikbaar als standalone executable, volgt de GitHub release pipeline en kan worden geinstalleerd via scripts
 **Depends on**: Phase 12
 **Requirements**: BUILD-01, BUILD-02, BUILD-03, LOG-01
+**Completed**: 2026-03-19
 **Success Criteria** (what must be TRUE):
   1. `eplan-import-tool.exe` start op een machine zonder Python installatie en toont de GUI zonder foutmeldingen
   2. Bij een nieuwe release controleert de tool bij opstart of er een update beschikbaar is en biedt aan te updaten via dezelfde CTk dialog als de BOM Import Tool
@@ -150,7 +151,7 @@ Plans:
 Plans:
 - [x] 13-01-PLAN.md — PyInstaller spec + install scripts + workflow doc update (BUILD-02, BUILD-03) ✅
 - [x] 13-02-PLAN.md — Build exe + GitHub release eplan-v1.0.0 + checkpoint GUI verificatie (BUILD-01, BUILD-02) ✅
-- [ ] 13-03-PLAN.md — ePlan audit logging naar SpinnekopTools.EPLAN_IMPORT_LOG (LOG-01)
+- [x] 13-03-PLAN.md — ePlan audit logging naar SpinnekopTools.EPLAN_IMPORT_LOG (LOG-01) ✅
 
 ### Phase 14: DB + Infrastructuur
 **Goal**: `Spinnekop_Reporting` bestaat op de SQL Server met de drie schemas, een gevulde kalender-tabel en een werkende ETL-controle tabel — het fundament waarop alle volgende lagen bouwen
@@ -239,7 +240,7 @@ Plans:
 | 9. Gebruiker-identificatie | v2.0 | 0/1 | Not started | - |
 | 11. Core Converter | v3.0 | 2/2 | Complete | 2026-03-19 |
 | 12. GUI | v3.0 | 2/2 | Complete | 2026-03-19 |
-| 13. Build & Deploy | 2/2 | Complete   | 2026-03-19 | - |
+| 13. Build & Deploy | v3.0 | 3/3 | Complete | 2026-03-19 |
 | 14. DB + Infrastructuur | v4.0 | 0/? | Not started | - |
 | 15. ETL | v4.0 | 0/? | Not started | - |
 | 16. Core-laag | v4.0 | 0/? | Not started | - |

@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 Phase: 14 of 18 (DB + Infrastructuur)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-03-19 — Completed 13-02-PLAN.md — eplan-import-tool.exe gebouwd en gepubliceerd als GitHub release eplan-v1.0.0
+Last activity: 2026-03-19 — Completed 13-03-PLAN.md — ePlan audit logging via log_eplan_import() in audit_logger.py + EPLAN_IMPORT_LOG DDL
 
-Note: v3.0 ePlan Import Tool (Phases 11-13) — Phase 13 fully completed (13-01 build config + 13-02 exe build & release). Phase 14 (DB + Infrastructuur) is next.
+Note: v3.0 ePlan Import Tool (Phases 11-13) — Phase 13 fully completed (13-01 build config + 13-02 exe build & release + 13-03 audit logging). Phase 14 (DB + Infrastructuur) is next.
 
 Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 ░░░░░░] [Phase 17 ░░░░░░] [Phase 18 ░░░░░░]
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13 (v1.0: 5, v1.1: 5, v2.0: 3)
+- Total plans completed: 14 (v1.0: 5, v1.1: 5, v2.0: 3, v3.0: 1)
 - Average duration: ~28 min
 - Total execution time: ~4.6 hours
 
@@ -41,6 +41,7 @@ Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 
 | Phase 12-gui P02 | 5 | 2 tasks | 1 files |
 | Phase 13-build-deploy P01 | 2 | 3 tasks | 5 files |
 | Phase 13-build-deploy P02 | 10 | 2 tasks | 1 files |
+| Phase 13-build-deploy P03 | 2 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,8 @@ Recent decisions affecting current work:
 - [Phase 13-build-deploy]: PyInstaller build geslaagd zonder extra hiddenimports — de 5 modules uit spec waren voldoende
 - [Phase 13-build-deploy]: GitHub release tag eplan-v1.0.0 — prefix eplan- correct voor auto-update filter in app_config
 - [Phase 13-build-deploy]: Release notes bijgewerkt met expliciete vermelding welke install scripts bij welke tool horen (scripts/deploy/eplan/ = ePlan tool)
+- [Phase 13-03]: duur_seconden left as None — no timer in convert(), column nullable, can be added later in eplan_gui.py without schema change
+- [Phase 13-03]: Audit call fires for both dry_run=True and dry_run=False — both runs are informative for usage tracking
 
 ### Roadmap Evolution
 
@@ -86,5 +89,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Completed 13-02-PLAN.md — eplan-import-tool.exe gebouwd en gepubliceerd als GitHub release eplan-v1.0.0
+Stopped at: Completed 13-03-PLAN.md — ePlan audit logging wired in, EPLAN_IMPORT_LOG DDL added to setup-spinnekoptools.sql
 Resume file: None
