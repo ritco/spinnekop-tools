@@ -112,7 +112,7 @@ Plans:
   1. Een ePlan Excel met 10 componenten (waarvan 2 duplicaten, 1 rij zonder Bestelnummer) levert exact 9 unieke regels op met geaggregeerde hoeveelheden en 1 waarschuwing
   2. Voor elk Bestelnummer vindt de converter het juiste RidderIQ-artikel via OMSCHRIJVING LIKE, of geeft een blokkerende fout bij meerdere matches
   3. Artikelen die niet bestaan in RidderIQ verschijnen in `01-nieuwe-artikelen-eplan.csv` met correct 26xxx code, artikelgroep PK 673, REGISTRATIONPATH=5 en INVENTORYKIND=4
-  4. De converter schrijft `02-stuklijst-header.csv` met projectnaam als stuklijstcode en `03-stuklijstregels.sql` met INSERT statements voor alle geaggregeerde regels
+  4. De converter schrijft `02-stuklijst-header.csv` met projectnaam als stuklijstcode en `03-stuklijstregels.csv` voor R_ASSEMBLYDETAILITEM import (zelfde kolomstructuur als BOM tool)
   5. Als de stuklijstcode al bestaat in R_ASSEMBLY, stopt de converter met een blokkerende fout voordat er bestanden worden geschreven
 **Plans**: 2 plans
 
