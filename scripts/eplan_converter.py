@@ -34,6 +34,11 @@ except ImportError:
     _sys.path.insert(0, str(Path(__file__).parent))
     from app_config import get_connection, get_output_basis
 
+try:
+    from audit_logger import log_eplan_import as _log_eplan_import
+except ImportError:
+    _log_eplan_import = None
+
 log = logging.getLogger(__name__)
 
 # =============================================================================
@@ -658,6 +663,24 @@ def convert(excel_path: str, env: str, dry_run: bool = True) -> ConversionResult
         len(result.matched), len(result.new_items),
         len(result.errors), len(result.warnings)
     )
+
+    # Audit logging — faalveilig, blokkeert nooit
+    if _log_eplan_import is not None:
+        try:
+            _log_eplan_import(
+                omgeving=env,
+                status='fout' if result.has_blockers else 'ok',
+                excel_bestand=Path(excel_path).name,
+                project_naam=result.projectnaam or None,
+                matched=len(result.matched),
+                nieuwe_artikelen=len(result.new_items),
+                overgeslagen=len(result.skipped),
+                fouten=len(result.errors),
+                foutmelding='; '.join(result.errors) if result.errors else None,
+            )
+        except Exception as _e:
+            log.warning("Audit logging mislukt (niet kritiek): %s", _e)
+
     return result
 
 
