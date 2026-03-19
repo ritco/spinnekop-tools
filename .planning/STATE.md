@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 Phase: 14 of 18 (DB + Infrastructuur)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-03-19 — Completed 12-02-PLAN.md — eplan_main.py entry point voor ePlan Import Tool
+Last activity: 2026-03-19 — Completed 13-02-PLAN.md — eplan-import-tool.exe gebouwd en gepubliceerd als GitHub release eplan-v1.0.0
 
-Note: v3.0 ePlan Import Tool (Phases 11-13) — Phase 12 fully completed (12-01 GUI + 12-02 entry point). Phase 13 (Build & Deploy) is next.
+Note: v3.0 ePlan Import Tool (Phases 11-13) — Phase 13 fully completed (13-01 build config + 13-02 exe build & release). Phase 14 (DB + Infrastructuur) is next.
 
 Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 ░░░░░░] [Phase 17 ░░░░░░] [Phase 18 ░░░░░░]
 
@@ -40,7 +40,7 @@ Progress: [Phase 14 ░░░░░░] [Phase 15 ░░░░░░] [Phase 16 
 | Phase 12 P01 | 2 min | 2 tasks | 1 file |
 | Phase 12-gui P02 | 5 | 2 tasks | 1 files |
 | Phase 13-build-deploy P01 | 2 | 3 tasks | 5 files |
-| Phase 13-build-deploy P02 | 5 | 1 tasks | 1 files |
+| Phase 13-build-deploy P02 | 10 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -65,6 +65,7 @@ Recent decisions affecting current work:
 - [Phase 13-build-deploy]: hiddenimports beperkt tot 5 modules: customtkinter, eplan_gui, eplan_converter, history, app_config
 - [Phase 13-build-deploy]: PyInstaller build geslaagd zonder extra hiddenimports — de 5 modules uit spec waren voldoende
 - [Phase 13-build-deploy]: GitHub release tag eplan-v1.0.0 — prefix eplan- correct voor auto-update filter in app_config
+- [Phase 13-build-deploy]: Release notes bijgewerkt met expliciete vermelding welke install scripts bij welke tool horen (scripts/deploy/eplan/ = ePlan tool)
 
 ### Roadmap Evolution
 
@@ -85,5 +86,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Completed 12-02-PLAN.md — eplan_main.py entry point (v1.0.0, update-check thread, EplanApp mainloop)
+Stopped at: Completed 13-02-PLAN.md — eplan-import-tool.exe gebouwd en gepubliceerd als GitHub release eplan-v1.0.0
 Resume file: None
