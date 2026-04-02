@@ -11,7 +11,7 @@ $EXE_NAME     = "artikelnamen.exe"
 $GITHUB_REPO  = "ritco/spinnekop-tools"
 $CHANNEL      = "prerelease"
 $DISPLAY_NAME = "Artikelnamen Tool"
-$TOOL_PREFIX  = "namen-"
+$TOOL_PREFIX  = "artikelnamen-"
 
 Write-Host ""
 Write-Host "=============================================" -ForegroundColor Magenta
