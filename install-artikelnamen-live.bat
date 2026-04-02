@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set "URL=https://raw.githubusercontent.com/ritco/spinnekop-tools/main/installers/install-artikelnamen-live.ps1"
+set "URL=https://raw.githubusercontent.com/ritco/spinnekop-tools/live/installers/install-artikelnamen-live.ps1"
 set "TMPFILE=%TEMP%\install-artikelnamen-live.ps1"
 
 echo Artikelnamen Tool - Installatie (LIVE)
